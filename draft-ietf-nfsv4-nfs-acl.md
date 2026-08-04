@@ -19,8 +19,8 @@ venue:
   type: "Working Group"
   mail: "nfsv4@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/nfsv4/"
-  github: "chucklever/i-d-nfs-acl"
-  latest: "https://chucklever.github.io/i-d-nfs-acl/draft-ietf-nfsv4-nfs-acl.html"
+  github: "ietf-wg-nfsv4/i-d-nfs-acl"
+  latest: "https://ietf-wg-nfsv4.github.io/i-d-nfs-acl/draft-ietf-nfsv4-nfs-acl.html"
 
 author:
  -
