@@ -4,16 +4,16 @@
 
 This is the working area for the IETF [NFSV4 Working Group](https://datatracker.ietf.org/group/nfsv4/documents/) Internet-Draft, "The Network File System Access Control List Protocol".
 
-* [Editor's Copy](https://chucklever.github.io/i-d-nfs-acl/#go.draft-ietf-nfsv4-nfs-acl.html)
+* [Editor's Copy](https://ietf-wg-nfsv4.github.io/i-d-nfs-acl/#go.draft-ietf-nfsv4-nfs-acl.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-nfsv4-nfs-acl)
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-nfsv4-nfs-acl)
-* [Compare Editor's Copy to Working Group Draft](https://chucklever.github.io/i-d-nfs-acl/#go.draft-ietf-nfsv4-nfs-acl.diff)
+* [Compare Editor's Copy to Working Group Draft](https://ietf-wg-nfsv4.github.io/i-d-nfs-acl/#go.draft-ietf-nfsv4-nfs-acl.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/chucklever/i-d-nfs-acl/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/ietf-wg-nfsv4/i-d-nfs-acl/blob/main/CONTRIBUTING.md).
 
 The contributing file also has tips on how to make contributions, if you
 don't already know how to do that.
