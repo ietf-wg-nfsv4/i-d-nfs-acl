@@ -702,6 +702,40 @@ const NA_DFACLCNT = 0x8;    /* number of entries in the dfaclent list */
 These bit field values are also used in the "mask" element of the
 GETACL2args and GETACL3args structures.
 
+#### The "mask" Element in a SETACL Request {#setacl-mask}
+
+In a GETACL request the "mask" element selects which fields
+the server fills in, as described in {{getacl2}} and
+{{getacl3}}. Implementations do not agree on what the
+element means in a SETACL request.
+
+The Linux NFS server treats it as selective there as well.
+It replaces the object's access ACL only when NA_ACL is set,
+and the object's default ACL only when NA_DFACL is set,
+leaving an unselected list as it found it.
+
+The Solaris NFS_ACL server does not consult the element on
+SETACL, and the outcome depends on the file system it
+exports. When that file system is UFS, the server stores
+exactly the entries the request carries, so the entries of a
+list the sender leaves empty are dropped from the object
+rather than preserved. When it is ZFS, the server returns
+ACL2ERR_NOTSUPP or ACL3ERR_NOTSUPP as described in
+{{no-acl-support}}.
+
+A SETACL that sets one of the two bits and clears the other
+therefore has no single meaning. Sent to a directory that
+holds both an access ACL and a default ACL, it preserves the
+unselected list on a Linux server and drops that list's
+entries on a Solaris server exporting UFS.
+
+A client avoids the divergence by setting both bits and
+sending both lists on every SETACL, reading back the list it
+does not intend to change so that it can send that list
+unaltered. The Linux NFS client does this: it sets NA_ACL on
+every SETACL, adds NA_DFACL for a directory, and fetches the
+sibling list before sending.
+
 ### Interoperability Considerations
 
 Interoperability between NFS peers that do not implement
@@ -964,7 +998,7 @@ NFS_ACL error status code. However, some server implementations may
 return RPC-level errors based on security or authentication policy
 settings.
 
-### Procedure 1: GETACL - Retrieve an Access Control List
+### Procedure 1: GETACL - Retrieve an Access Control List {#getacl2}
 
 #### ARGUMENTS
 
@@ -1112,6 +1146,10 @@ When the new ACL does not contain at least the minimal
 set of ACEs (as described in {{acls-in-operation}}), the
 server responds by setting SETACL2res.status to
 ACL2ERR_INVAL.
+
+Servers differ in how they treat the "mask" element of
+SETACL2args.acl. {{setacl-mask}} describes the divergence
+and how a client avoids it.
 
 #### ERRORS
 
@@ -1680,7 +1718,7 @@ result, it can not return an NFS or NFS_ACL error status code.
 However, some server implementations may return RPC errors
 based on security or authentication policy settings.
 
-### Procedure 1: GETACL - Retrieve an Access Control List
+### Procedure 1: GETACL - Retrieve an Access Control List {#getacl3}
 
 #### ARGUMENTS
 
@@ -1841,6 +1879,10 @@ When SETACL3args.acl does not contain at least the
 minimal set of ACEs (as described in
 {{acls-in-operation}}), the server responds by setting
 SETACL3res.status to ACL3ERR_INVAL.
+
+Servers differ in how they treat the "mask" element of
+SETACL3args.acl. {{setacl-mask}} describes the divergence
+and how a client avoids it.
 
 #### ERRORS
 
