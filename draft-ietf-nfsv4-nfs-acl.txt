@@ -4,8 +4,8 @@
 
 Network File System Version 4                              C. Lever, Ed.
 Internet-Draft                                               Independent
-Intended status: Informational                             4 August 2026
-Expires: 5 February 2027
+Intended status: Informational                            21 August 2026
+Expires: 22 February 2027
 
 
           The Network File System Access Control List Protocol
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 February 2027.
+   This Internet-Draft will expire on 22 February 2027.
 
 Copyright Notice
 
@@ -74,7 +74,7 @@ Table of Contents
      3.1.  A Glossary of Useful Terms
      3.2.  Remote Procedure Call
      3.3.  External Data Representation
-       3.3.1.  Extensions to RFC 4506
+       3.3.1.  XDR Types Not Defined in RFC 4506
      3.4.  Authentication and Authorization
      3.5.  File Access Control
        3.5.1.  File Ownership
@@ -136,6 +136,9 @@ Table of Contents
      9.1.  Solaris NFS server and client
      9.2.  Linux NFS server and client
    10. Security Considerations
+     10.1.  Attacks on an Unprotected Exchange
+     10.2.  Protecting an Exchange
+     10.3.  Residual Risk
    11. IANA Considerations
    12. References
      12.1.  Normative References
@@ -262,22 +265,23 @@ Table of Contents
    Readers can find a full guide to XDR and the RPC Data Description
    Language in [RFC4506].
 
-3.3.1.  Extensions to RFC 4506
+3.3.1.  XDR Types Not Defined in RFC 4506
 
-   The original NFS_ACL version 2 RPC language specification includes
-   the use of the "unsigned short" type.  This type is not described in
-   [RFC4506].  However, most current implementations of the rpcgen
-   program implement support for this type.  This section provides a
-   proper specification for "short" and "unsigned short" integer types
-   for the RPC language, based on those implementations.  This is so
-   that the NFS_ACL version 2 RPC language specification appearing in
-   this document accurately reflects the wire behavior of existing
-   implementations.
+   The original NFS_ACL RPC language specification uses the "unsigned
+   short" and "unsigned long" types.  [RFC4506] describes neither,
+   though most current implementations of the rpcgen program accept
+   both.  This section describes the "unsigned short" and "unsigned
+   long" integer types as used in this document, based on those
+   implementations, so that the NFS_ACL RPC language specification
+   appearing here accurately reflects the wire behavior of existing
+   implementations.  It does not add these types to the RPC Data
+   Description Language.
 
-   The XDR wire representation of both types is a network-endian 32-bit
-   integer, sign-extended.  This maintains XDR's consistent 4-octet
+   The XDR wire representation of each of these types is a network-
+   endian 32-bit integer.  This maintains XDR's consistent 4-octet
    alignment for all basic integer types while allowing applications to
-   use narrower types internally.
+   use narrower types internally.  The subsections below describe how a
+   value of each type occupies that 32-bit field.
 
 3.3.1.1.  unsigned short
 
@@ -287,19 +291,17 @@ Table of Contents
 
    Example: 0xFFFF (65535) appears as 0x0000FFFF on the wire.
 
-3.3.1.2.  signed short
+3.3.1.2.  unsigned long
 
-   The short type is sign-extended, with the high-order two octets
-   replicating the sign bit.  The value range of this type is -32768 to
-   32767, inclusive.
+   The unsigned long type occupies all four octets of the 32-bit field
+   and requires no extension.  Its wire representation is identical to
+   that of the "unsigned int" type described in Section 4.2 of
+   [RFC4506].  The value range of this type is zero to 4,294,967,295,
+   inclusive.
 
-   When a signed short contains a positive or zero value, its high-order
-   octets each contain 0x00.  For example: 0x7FFF (32767) appears as
-   0x00007FFF on the wire.
-
-   When a signed short contains a negative value, its high-order octets
-   each contain 0xFF.  For example: 0xFFFF (-1) appears as 0xFFFFFFFF on
-   the wire, and 0x8000 (-32768) appears as 0xFFFF8000 on the wire.
+   The NFS version 3 protocol specification [RFC1813] uses this type
+   name for 32-bit unsigned quantities, and this document retains it in
+   the data types that it inherits from that protocol.
 
 3.4.  Authentication and Authorization
 
@@ -313,9 +315,12 @@ Table of Contents
    For NFS ACLs, the user ID carried in RPC calls is used for two
    purposes:
 
-   *  When setting an ACL via the SETACL procedure or retrieving an ACL
-      via the GETACL procedure, the NFS_ACL service verifies that the
-      calling user has been granted permission to perform the procedure.
+   *  When setting an ACL via the SETACL procedure, the NFS_ACL service
+      verifies that the calling user has been granted permission to
+      perform the procedure.  The GETACL procedure carries no such check
+      of its own.  The server passes the calling user's credential to
+      the local file system, which may or may not restrict who can read
+      an object's ACL.
 
    *  Each Access Control Entry (see below) contains an element that
       identifies the user to which the ACE applies.  That user is
@@ -479,15 +484,37 @@ Table of Contents
 
    An NFS ACL may have zero or more NA_USER and/or NA_GROUP ACEs.
 
-   On the wire, a minimal NFS ACL is represented as four Access Control
-   Entries rather than three.  Along with the NA_USER_OBJ, NA_GROUP_OBJ,
-   and NA_OTHER_OBJ entries, the sender synthesizes an NA_CLASS_OBJ
-   entry whose "perm" element is derived from the permission bits of the
-   object's owning group.
+   On the wire, a minimal NFS ACL is represented as either three Access
+   Control Entries or four.  A sender that uses four adds an
+   NA_CLASS_OBJ entry to the NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ
+   entries, and derives that entry's "perm" element from the permission
+   bits of the object's owning group.  The Linux NFS server expands a
+   three-entry list this way in both the "aclent" and the "dfaclent"
+   array.
+
+   The Solaris NFS_ACL server performs no such expansion, and what it
+   sends depends on the file system it exports.  A Solaris server
+   exporting a ZFS file system sends the manufactured ACL described in
+   Section 4.6.3.3, which always occupies four entries in the "aclent"
+   array and none in the "dfaclent" array.  A Solaris server exporting a
+   UFS file system sends three entries for an object whose ACL has no
+   mask entry.  A receiver accepts either representation in either
+   array.
 
    The Access Control Entries in each of the "aclent" and "dfaclent"
    arrays appear in ascending order of their "type" element value.  Some
-   receivers depend on this ordering.
+   receivers depend on this ordering.  The manufactured ACL described in
+   Section 4.6.3.3 is the one exception among the implementations this
+   document surveys.
+
+
+   // The Solaris entry order and class permission are described in
+   // Section 4.6.3.3 as behavior, not identified as defects.  If the
+   // working group reads either as a bug to report rather than a
+   // variation to document, this text and Section 4.6.3.3 should say
+   // so.  See repository issue #2.
+   //
+   // -- editor
 
    When a client presents a SETACL operation that a server finds is
    invalid or it cannot process, the server responds with ACL2ERR_INVAL
@@ -696,6 +723,47 @@ Table of Contents
    These bit field values are also used in the "mask" element of the
    GETACL2args and GETACL3args structures.
 
+4.6.2.1.  The "mask" Element in a SETACL Request
+
+   In a GETACL request the "mask" element selects which fields the
+   server fills in, as described in Section 5.2.2 and Section 6.3.2.
+   Implementations do not agree on what the element means in a SETACL
+   request.
+
+   The Linux NFS server treats it as selective there as well.  It
+   replaces the object's access ACL only when NA_ACL is set, and the
+   object's default ACL only when NA_DFACL is set, leaving an unselected
+   list as it found it.
+
+   The Solaris NFS_ACL server does not consult the element on SETACL,
+   and the outcome depends on the file system it exports.  When that
+   file system is UFS, the server stores exactly the entries the request
+   carries, so the entries of a list the sender leaves empty are dropped
+   from the object rather than preserved.  When it is ZFS, the server
+   returns ACL2ERR_NOTSUPP or ACL3ERR_NOTSUPP as described in
+   Section 4.6.3.3.
+
+   A SETACL that sets one of the two bits and clears the other therefore
+   has no single meaning.  Sent to a directory that holds both an access
+   ACL and a default ACL, it preserves the unselected list on a Linux
+   server and drops that list's entries on a Solaris server exporting
+   UFS.
+
+   A client avoids the divergence by setting both bits and sending both
+   lists on every SETACL, reading back the list it does not intend to
+   change so that it can send that list unaltered.  The Linux NFS client
+   does this: it sets NA_ACL on every SETACL, adds NA_DFACL for a
+   directory, and fetches the sibling list before sending.
+
+
+   // This section records the divergence rather than recommending one
+   // behavior.  A client that follows the last paragraph is safe
+   // against either server, but a server implementer is left without an
+   // answer.  Does the working group want to choose one?  See
+   // repository issue #1.
+   //
+   // -- editor
+
 4.6.3.  Interoperability Considerations
 
    Interoperability between NFS peers that do not implement the NFS_ACL
@@ -734,11 +802,26 @@ Table of Contents
    this case, NFS clients detect the presence of an NFS_ACL service on
    the NFS server.
 
+   This is not an unusual case.  A Solaris server exporting a ZFS file
+   system behaves as this section describes for every object it shares:
+   GETACL returns a manufactured ACL, and SETACL fails.  The behavior
+   described here is therefore the ordinary one for a Solaris server on
+   its default file system, not a fallback reserved for file systems
+   without access control.
+
    For file objects that do not implement ACL support:
 
    *  The server responds to a GETACL procedure by returning a
-      manufactured minimal ACL (i.e., only three ACEs) that reflects the
-      current mode bits of the object.
+      manufactured minimal ACL that reflects the current mode bits of
+      the object.  Both surveyed servers manufacture four Access Control
+      Entries in the "aclent" array and leave the "dfaclent" array
+      empty; neither manufactures a default ACL.  The Solaris server
+      departs from the rules given in Section 3.5.4.2 on this path.  It
+      sets the NA_CLASS_OBJ entry's "perm" element to the constant value
+      7 rather than deriving it from the owning group's permission bits,
+      and it emits the entries in the order NA_USER_OBJ, NA_GROUP_OBJ,
+      NA_OTHER_OBJ, NA_CLASS_OBJ, which is not ascending order of "type"
+      value.
 
    *  The server responds to a SETACL version 3 procedure by returning
       ACL3ERR_NOTSUPP.
@@ -1063,6 +1146,10 @@ Table of Contents
    When the new ACL does not contain at least the minimal set of ACEs
    (as described in Section 3.5.4.2), the server responds by setting
    SETACL2res.status to ACL2ERR_INVAL.
+
+   Servers differ in how they treat the "mask" element of
+   SETACL2args.acl.  Section 4.6.2.1 describes the divergence and how a
+   client avoids it.
 
 5.2.3.5.  ERRORS
 
@@ -1750,6 +1837,10 @@ Table of Contents
    When SETACL3args.acl does not contain at least the minimal set of
    ACEs (as described in Section 3.5.4.2), the server responds by
    setting SETACL3res.status to ACL3ERR_INVAL.
+
+   Servers differ in how they treat the "mask" element of
+   SETACL3args.acl.  Section 4.6.2.1 describes the divergence and how a
+   client avoids it.
 
 6.3.3.5.  ERRORS
 
@@ -2553,14 +2644,111 @@ Table of Contents
 
 10.  Security Considerations
 
-   An attacker can alter the content of an ACL as it transits an open
-   network, giving the attacker access to file content that the ACL is
-   supposed to protect.
+   NFS_ACL was designed for a single administrative domain on a
+   physically protected network.  This section considers a broader
+   environment: deployment across the global Internet, spanning
+   administrative boundaries, with no firewall assumed between a client
+   and its server.
 
-   Therefore, implementations of NFS_ACL should protect the integrity of
-   ACL content when it transits a network.  The use of an integrity-
-   preserving transport layer security service, such as the GSS Kerberos
-   integrity service, is strongly recommended.
+   NFS_ACL carries no security mechanism of its own.  It inherits what
+   the RPC layer provides, and it names the users and groups in an
+   Access Control Entry using the identities that layer supplies (see
+   Section 3.4).  What follows therefore turns on the choice of RPC
+   authentication flavor and transport.
+
+   Attacks on the NFS version 2 and version 3 protocols themselves are
+   out of scope.  An attacker who can read or alter file content
+   directly through NFS gains nothing by attacking the ACL that governs
+   it, and [RFC2623] covers those protocols.  Attacks on the local file
+   system that stores an ACL, and on the mechanism by which a site maps
+   users to uid and gid values, are out of scope as well.
+
+10.1.  Attacks on an Unprotected Exchange
+
+   Running NFS_ACL over AUTH_SYS on an unprotected transport defends
+   against none of the following.
+
+   Eavesdropping:  A GETACL reply carries an object's full Access
+      Control List.  An observer learns which users and groups hold
+      access to the object, and the uid and gid values that name them.
+      The list is worth reading even when the file content is not.
+
+   Modification and man-in-the-middle:  Altering a SETACL argument
+      changes the access control the server installs.  Altering a GETACL
+      reply gives the client a false view of it.  Altering an ACCESS
+      reply misleads a client that uses the result to decide whether to
+      attempt an operation.
+
+   Message insertion:  AUTH_SYS supplies no verifier by which a
+      credential can be validated (Section 14 of [RFC5531]).  An
+      attacker who can reach the server and holds a file handle for an
+      object can forge a SETACL request bearing the file owner's uid.
+
+   Replay:  SETACL is not idempotent.  A replayed SETACL reinstates an
+      ACL that the file owner has since replaced.  The duplicate request
+      cache (Section 7.2) recognizes a retransmission, but it is finite:
+      a replay delayed beyond its reach is processed as a new request.
+
+   Message deletion and denial of service:  Discarding NFS_ACL messages
+      denies a client the ability to read or change an ACL.  An attacker
+      positioned to do this can discard the NFS traffic alongside it, so
+      NFS_ACL neither adds to nor reduces the exposure.
+
+   Section 14 of [RFC5531] states that AUTH_SYS should not be used for
+   services that permit clients to modify data.  SETACL modifies the
+   data that governs every other access to the object.  Section 4.1
+   reports that implementations permit any authentication flavor on
+   procedures other than NULL.  That records what implementations
+   accept; it does not recommend AUTH_SYS for SETACL.
+
+
+   // This paragraph stops short of a recommendation.  The alternative
+   // is to state that a server should refuse SETACL under AUTH_SYS,
+   // which no surveyed implementation does.  Does the working group
+   // want a recommendation here?  See repository issue #3.
+   //
+   // -- editor
+
+10.2.  Protecting an Exchange
+
+   Two mechanisms available to an NFS version 2 or version 3 deployment
+   apply unchanged to NFS_ACL, which shares the transport and port of
+   the NFS service it accompanies.
+
+   RPCSEC_GSS [RFC2203] [RFC7861] replaces AUTH_SYS with a GSS-API
+   mechanism.  Its integrity service authenticates the RPC peer and
+   detects alteration of each call and reply, addressing insertion,
+   modification, and man-in-the-middle.  Per-request sequence numbers
+   detect replay within a window the server sizes.  Integrity leaves ACL
+   content readable on the wire; the privacy service encrypts arguments
+   and results and closes that gap.  [RFC2623] describes how the NFS
+   version 2 and version 3 protocols use RPCSEC_GSS and Kerberos V5.
+
+   RPC-over-TLS [RFC9289] protects the transport connection rather than
+   the individual RPC message.  It supplies confidentiality and
+   integrity for everything on the connection and can authenticate the
+   peer host.  It does not authenticate the RPC user, so a server
+   relying on it alone still takes on trust the uid and gid each request
+   carries.
+
+10.3.  Residual Risk
+
+   Neither mechanism changes what an authenticated caller may do.
+   GETACL carries no permission check of its own (see Section 3.4), so a
+   caller holding a file handle can often read the object's ACL and the
+   user and group IDs it names.  A deployment that treats ACL membership
+   as sensitive cannot rely on the protocol to withhold it.
+
+   A server that maps a privileged caller to a less privileged identity
+   (see Section 7.1) decides on the strength of the uid the request
+   carries.  Under AUTH_SYS the client supplies that value, so the
+   mapping deters accident rather than attack.
+
+   An ACL a client has read, and the result of an ACCESS procedure,
+   describe the server's decision at the moment it was made.  The server
+   alone authorizes access (see Section 3.5.4.1) and can revoke it at
+   any time.  A client that caches either and relies on it later may be
+   relying on information that no longer holds.
 
 11.  IANA Considerations
 
@@ -2644,14 +2832,32 @@ Table of Contents
               RFC 1833, DOI 10.17487/RFC1833, August 1995,
               <https://www.rfc-editor.org/rfc/rfc1833>.
 
+   [RFC2203]  Eisler, M., Chiu, A., and L. Ling, "RPCSEC_GSS Protocol
+              Specification", RFC 2203, DOI 10.17487/RFC2203, September
+              1997, <https://www.rfc-editor.org/rfc/rfc2203>.
+
+   [RFC2623]  Eisler, M., "NFS Version 2 and Version 3 Security Issues
+              and the NFS Protocol's Use of RPCSEC_GSS and Kerberos V5",
+              RFC 2623, DOI 10.17487/RFC2623, June 1999,
+              <https://www.rfc-editor.org/rfc/rfc2623>.
+
    [RFC7530]  Haynes, T., Ed. and D. Noveck, Ed., "Network File System
               (NFS) Version 4 Protocol", RFC 7530, DOI 10.17487/RFC7530,
               March 2015, <https://www.rfc-editor.org/rfc/rfc7530>.
+
+   [RFC7861]  Adamson, A. and N. Williams, "Remote Procedure Call (RPC)
+              Security Version 3", RFC 7861, DOI 10.17487/RFC7861,
+              November 2016, <https://www.rfc-editor.org/rfc/rfc7861>.
 
    [RFC8881]  Noveck, D., Ed. and C. Lever, "Network File System (NFS)
               Version 4 Minor Version 1 Protocol", RFC 8881,
               DOI 10.17487/RFC8881, August 2020,
               <https://www.rfc-editor.org/rfc/rfc8881>.
+
+   [RFC9289]  Myklebust, T. and C. Lever, Ed., "Towards Remote Procedure
+              Call Encryption by Default", RFC 9289,
+              DOI 10.17487/RFC9289, September 2022,
+              <https://www.rfc-editor.org/rfc/rfc9289>.
 
 Appendix A.  Source Material
 
@@ -2709,9 +2915,8 @@ Acknowledgments
    Thomson, Rob Thurlow, and Jim Wright for their input and support.
 
    Special thanks to Area Director Gorry Fairhurst, NFSV4 Working Group
-   Chairs Brian Pawlowski and Christopher Inacio, and NFSV4 Working
-   Group Secretary Thomas Haynes for their patience, guidance, and
-   oversight.
+   Chair Brian Pawlowski, and NFSV4 Working Group Secretary Thomas
+   Haynes for their patience, guidance, and oversight.
 
 Author's Address
 

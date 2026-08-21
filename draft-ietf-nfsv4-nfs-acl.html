@@ -18,14 +18,14 @@ Control Lists stored on an NFS version 2 or version 3 server.
 <meta content="draft-ietf-nfsv4-nfs-acl-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.0
-    Python 3.14.5
+    Python 3.14.7
     ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.0
+    platformdirs 4.11.3
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
@@ -1049,7 +1049,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Lever</td>
-<td class="center">Expires 5 February 2027</td>
+<td class="center">Expires 22 February 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg {
 <dd class="internet-draft">draft-ietf-nfsv4-nfs-acl-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-08-04" class="published">4 August 2026</time>
+<time datetime="2026-08-21" class="published">21 August 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-02-05">5 February 2027</time></dd>
+<dd class="expires"><time datetime="2027-02-22">22 February 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1121,7 +1121,7 @@ Control Lists stored on an NFS version 2 or version 3 server.<a href="#section-a
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1169,7 +1169,7 @@ Control Lists stored on an NFS version 2 or version 3 server.<a href="#section-a
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-external-data-representatio" class="internal xref">External Data Representation</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
-                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-extensions-to-rfc-4506" class="internal xref">Extensions to RFC 4506</a></p>
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-xdr-types-not-defined-in-rf" class="internal xref">XDR Types Not Defined in RFC 4506</a></p>
 </li>
                 </ul>
 </li>
@@ -1369,6 +1369,17 @@ Control Lists stored on an NFS version 2 or version 3 server.<a href="#section-a
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-attacks-on-an-unprotected-e" class="internal xref">Attacks on an Unprotected Exchange</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-protecting-an-exchange" class="internal xref">Protecting an Exchange</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
+                <p id="section-toc.1-1.10.2.3.1"><a href="#section-10.3" class="auto internal xref">10.3</a>.  <a href="#name-residual-risk" class="internal xref">Residual Risk</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -1558,22 +1569,24 @@ specify the XDR format arguments and results to each of the RPC
 service procedures that an NFS_ACL server provides.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
 <p id="section-3.3-3">Readers can find a full guide to XDR and the RPC Data Description
 Language in <span>[<a href="#RFC4506" class="cite xref">RFC4506</a>]</span>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<div id="extensions-to-rfc-4506">
+<div id="xdr-types-not-defined-in-rfc-4506">
 <section id="section-3.3.1">
-          <h4 id="name-extensions-to-rfc-4506">
-<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-extensions-to-rfc-4506" class="section-name selfRef">Extensions to RFC 4506</a>
+          <h4 id="name-xdr-types-not-defined-in-rf">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-xdr-types-not-defined-in-rf" class="section-name selfRef">XDR Types Not Defined in RFC 4506</a>
           </h4>
-<p id="section-3.3.1-1">The original NFS_ACL version 2 RPC language specification includes the use of
-the "unsigned short" type. This type is not described in <span>[<a href="#RFC4506" class="cite xref">RFC4506</a>]</span>. However,
-most current implementations of the rpcgen program implement support for
-this type. This section provides a proper specification for "short" and
-"unsigned short" integer types for the RPC language, based on those
-implementations. This is so that the NFS_ACL version 2 RPC language
-specification appearing in this document accurately reflects the wire behavior
-of existing implementations.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-2">The XDR wire representation of both types is a network-endian 32-bit integer,
-sign-extended. This maintains XDR's consistent 4-octet alignment for all basic
-integer types while allowing applications to use narrower types internally.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-1">The original NFS_ACL RPC language specification uses the "unsigned short" and
+"unsigned long" types. <span>[<a href="#RFC4506" class="cite xref">RFC4506</a>]</span> describes neither, though most current
+implementations of the rpcgen program accept both. This section describes the
+"unsigned short" and "unsigned long" integer types as used in this document,
+based on those implementations, so that the NFS_ACL RPC language specification
+appearing here accurately reflects the wire behavior of existing
+implementations. It does not add these types to the RPC Data Description
+Language.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">The XDR wire representation of each of these types is a network-endian 32-bit
+integer. This maintains XDR's consistent 4-octet alignment for all basic
+integer types while allowing applications to use narrower types internally.
+The subsections below describe how a value of each type occupies that 32-bit
+field.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
 <div id="unsigned-short">
 <section id="section-3.3.1.1">
             <h5 id="name-unsigned-short">
@@ -1585,26 +1598,25 @@ inclusive.<a href="#section-3.3.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.3.1.1-2">Example: 0xFFFF (65535) appears as 0x0000FFFF on the wire.<a href="#section-3.3.1.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="signed-short">
+<div id="unsigned-long">
 <section id="section-3.3.1.2">
-            <h5 id="name-signed-short">
-<a href="#section-3.3.1.2" class="section-number selfRef">3.3.1.2. </a><a href="#name-signed-short" class="section-name selfRef">signed short</a>
+            <h5 id="name-unsigned-long">
+<a href="#section-3.3.1.2" class="section-number selfRef">3.3.1.2. </a><a href="#name-unsigned-long" class="section-name selfRef">unsigned long</a>
             </h5>
-<p id="section-3.3.1.2-1">The short type is sign-extended, with the high-order two octets replicating
-the sign bit. The value range of this type is -32768 to 32767, inclusive.<a href="#section-3.3.1.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.3.1.2-2">When a signed short contains a positive or zero value, its high-order octets
-each contain 0x00. For example: 0x7FFF (32767) appears as 0x00007FFF on the
-wire.<a href="#section-3.3.1.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.3.1.2-3">When a signed short contains a negative value, its high-order octets each
-contain 0xFF. For example: 0xFFFF (-1) appears as 0xFFFFFFFF on the wire,
-and 0x8000 (-32768) appears as 0xFFFF8000 on the wire.<a href="#section-3.3.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.1.2-1">The unsigned long type occupies all four octets of the 32-bit field and
+requires no extension. Its wire representation is identical to that of the
+"unsigned int" type described in <span><a href="https://rfc-editor.org/rfc/rfc4506#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC4506" class="cite xref">RFC4506</a>]</span>. The value range
+of this type is zero to 4,294,967,295, inclusive.<a href="#section-3.3.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1.2-2">The NFS version 3 protocol specification <span>[<a href="#RFC1813" class="cite xref">RFC1813</a>]</span> uses this type name for
+32-bit unsigned quantities, and this document retains it in the data types
+that it inherits from that protocol.<a href="#section-3.3.1.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 </section>
 </div>
-<div id="authentication-and-authorization">
+<div id="auth-and-authz">
 <section id="section-3.4">
         <h3 id="name-authentication-and-authoriz">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-authentication-and-authoriz" class="section-name selfRef">Authentication and Authorization</a>
@@ -1619,10 +1631,12 @@ of the mechanics of RPC user authentication appears in
 for two purposes:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-3.1">
-            <p id="section-3.4-3.1.1">When setting an ACL via the SETACL procedure or retrieving
-an ACL via the GETACL procedure, the NFS_ACL service verifies
-that the calling user has been granted permission to perform
-the procedure.<a href="#section-3.4-3.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-3.1.1">When setting an ACL via the SETACL procedure, the NFS_ACL
+service verifies that the calling user has been granted
+permission to perform the procedure. The GETACL procedure
+carries no such check of its own. The server passes the
+calling user's credential to the local file system, which
+may or may not restrict who can read an object's ACL.<a href="#section-3.4-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-3.2">
             <p id="section-3.4-3.2.1">Each Access Control Entry (see below) contains an element
@@ -1746,7 +1760,7 @@ and a specific user or group. An Access Control List is a list of ACEs.<a href="
 <p id="section-3.5.4-2">Mode bits, as explained in the previous section, are essentially an
 ACL that always contains exactly three ACEs: one for the file's owner,
 one for the file's owner group, and one for everyone else.<a href="#section-3.5.4-2" class="pilcrow">¶</a></p>
-<div id="interpreting-access-control-lists">
+<div id="interpreting-acls">
 <section id="section-3.5.4.1">
             <h5 id="name-interpreting-access-control">
 <a href="#section-3.5.4.1" class="section-number selfRef">3.5.4.1. </a><a href="#name-interpreting-access-control" class="section-name selfRef">Interpreting Access Control Lists</a>
@@ -1840,44 +1854,65 @@ An NFS ACL that consists only of these
 three ACEs is referred to as a minimal NFS ACL.<a href="#section-3.5.4.2-3" class="pilcrow">¶</a></p>
 <p id="section-3.5.4.2-4">An NFS ACL may have zero or more NA_USER and/or NA_GROUP
 ACEs.<a href="#section-3.5.4.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.5.4.2-5">On the wire, a minimal NFS ACL is represented as four
-Access Control Entries rather than three. Along with the
-NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ entries, the
-sender synthesizes an NA_CLASS_OBJ entry whose "perm"
-element is derived from the permission bits of the object's
-owning group.<a href="#section-3.5.4.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.5.4.2-6">The Access Control Entries in each of the "aclent" and
+<p id="section-3.5.4.2-5">On the wire, a minimal NFS ACL is represented as either
+three Access Control Entries or four. A sender that uses
+four adds an NA_CLASS_OBJ entry to the NA_USER_OBJ,
+NA_GROUP_OBJ, and NA_OTHER_OBJ entries, and derives that
+entry's "perm" element from the permission bits of the
+object's owning group. The Linux NFS server expands a
+three-entry list this way in both the "aclent" and the
+"dfaclent" array.<a href="#section-3.5.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.5.4.2-6">The Solaris NFS_ACL server performs no such expansion, and
+what it sends depends on the file system it exports. A
+Solaris server exporting a ZFS file system sends the
+manufactured ACL described in <a href="#no-acl-support" class="auto internal xref">Section 4.6.3.3</a>, which
+always occupies four entries in the "aclent" array and none
+in the "dfaclent" array. A Solaris server exporting a UFS
+file system sends three entries for an object whose ACL has
+no mask entry. A receiver accepts either representation in
+either array.<a href="#section-3.5.4.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.5.4.2-7">The Access Control Entries in each of the "aclent" and
 "dfaclent" arrays appear in ascending order of their "type"
-element value. Some receivers depend on this ordering.<a href="#section-3.5.4.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.5.4.2-7">When a client presents a SETACL operation that a server
+element value. Some receivers depend on this ordering. The
+manufactured ACL described in <a href="#no-acl-support" class="auto internal xref">Section 4.6.3.3</a> is the one
+exception among the implementations this document surveys.<a href="#section-3.5.4.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.5.4.2-8"><span class="cref" id="open-fabricated-acl">
+The Solaris entry order and class permission are described
+in <a href="#no-acl-support" class="auto internal xref">Section 4.6.3.3</a> as behavior, not
+identified as defects. If the working group reads either as
+a bug to report rather than a variation to document, this
+text and <a href="#no-acl-support" class="auto internal xref">Section 4.6.3.3</a> should say so. See
+repository issue #2.
+<span class="crefSource">editor</span></span><a href="#section-3.5.4.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.5.4.2-9">When a client presents a SETACL operation that a server
 finds is invalid or it cannot process, the server responds
 with ACL2ERR_INVAL or ACL3ERR_INVAL, depending on the version
-of NFS_ACL that is in use. ACLs that are not valid include:<a href="#section-3.5.4.2-7" class="pilcrow">¶</a></p>
+of NFS_ACL that is in use. ACLs that are not valid include:<a href="#section-3.5.4.2-9" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.5.4.2-8.1">
-                <p id="section-3.5.4.2-8.1.1">The presented ACL does not contain one ACE for each of
-NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ<a href="#section-3.5.4.2-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.5.4.2-10.1">
+                <p id="section-3.5.4.2-10.1.1">The presented ACL does not contain one ACE for each of
+NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ<a href="#section-3.5.4.2-10.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.5.4.2-8.2">
-                <p id="section-3.5.4.2-8.2.1">The presented ACL is a default ACL but the target object
-is not a directory<a href="#section-3.5.4.2-8.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.5.4.2-10.2">
+                <p id="section-3.5.4.2-10.2.1">The presented ACL is a default ACL but the target object
+is not a directory<a href="#section-3.5.4.2-10.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.5.4.2-8.3">
-                <p id="section-3.5.4.2-8.3.1">The presented ACL contains too many ACEs<a href="#section-3.5.4.2-8.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.5.4.2-10.3">
+                <p id="section-3.5.4.2-10.3.1">The presented ACL contains too many ACEs<a href="#section-3.5.4.2-10.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.5.4.2-8.4">
-                <p id="section-3.5.4.2-8.4.1">The presented ACL contains an ACE whose "type" field
+              <li class="normal" id="section-3.5.4.2-10.4">
+                <p id="section-3.5.4.2-10.4.1">The presented ACL contains an ACE whose "type" field
 sets more than one of the base type values NA_USER_OBJ,
 NA_USER, NA_GROUP_OBJ, NA_GROUP, NA_CLASS_OBJ, and
 NA_OTHER_OBJ (the NA_ACL_DEFAULT flag may accompany
-exactly one such value)<a href="#section-3.5.4.2-8.4.1" class="pilcrow">¶</a></p>
+exactly one such value)<a href="#section-3.5.4.2-10.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.5.4.2-8.5">
-                <p id="section-3.5.4.2-8.5.1">The presented ACL contains an ACE whose type or perm
-field has a bit set that is not defined by this protocol<a href="#section-3.5.4.2-8.5.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.5.4.2-10.5">
+                <p id="section-3.5.4.2-10.5.1">The presented ACL contains an ACE whose type or perm
+field has a bit set that is not defined by this protocol<a href="#section-3.5.4.2-10.5.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-3.5.4.2-9">The NA_ACL_DEFAULT bit is a flag that a sender combines with
+<p id="section-3.5.4.2-11">The NA_ACL_DEFAULT bit is a flag that a sender combines with
 one of the base type values (for example, NA_ACL_DEFAULT |
 NA_USER_OBJ) to mark an Access Control Entry as a default
 entry: one that a directory contributes to its newly created
@@ -1888,20 +1923,20 @@ NA_ACL_DEFAULT bit set in its "type" field, and no entry in the
 separate "dfaclent" array makes the flag redundant on the wire;
 a sender nonetheless sets it on every "dfaclent" entry so that a
 receiver can reconstruct the single, flag-tagged Access Control
-list that some file access APIs present to applications.<a href="#section-3.5.4.2-9" class="pilcrow">¶</a></p>
-<p id="section-3.5.4.2-10">The "id" field in an Access Control Entry is interpreted as follows:<a href="#section-3.5.4.2-10" class="pilcrow">¶</a></p>
+list that some file access APIs present to applications.<a href="#section-3.5.4.2-11" class="pilcrow">¶</a></p>
+<p id="section-3.5.4.2-12">The "id" field in an Access Control Entry is interpreted as follows:<a href="#section-3.5.4.2-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.5.4.2-11.1">
-                <p id="section-3.5.4.2-11.1.1">For an ACE that specifies an NA_USER_OBJ, NA_USER,
+<li class="normal" id="section-3.5.4.2-13.1">
+                <p id="section-3.5.4.2-13.1.1">For an ACE that specifies an NA_USER_OBJ, NA_USER,
 NA_GROUP, and NA_GROUP_OBJ, the "id" field contains
 a UID or GID value that identifies the user on the
-server whose access permission is being set.<a href="#section-3.5.4.2-11.1.1" class="pilcrow">¶</a></p>
+server whose access permission is being set.<a href="#section-3.5.4.2-13.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.5.4.2-11.2">
-                <p id="section-3.5.4.2-11.2.1">For an ACE that specifies other types of permission (for
+              <li class="normal" id="section-3.5.4.2-13.2">
+                <p id="section-3.5.4.2-13.2.1">For an ACE that specifies other types of permission (for
 example, NA_CLASS_OBJ or NA_OTHER_OBJ), the "id" field is
 undefined. A sender sets this field to zero, and a receiver
-ignores its value.<a href="#section-3.5.4.2-11.2.1" class="pilcrow">¶</a></p>
+ignores its value.<a href="#section-3.5.4.2-13.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
@@ -2137,6 +2172,47 @@ const NA_DFACLCNT = 0x8;    /* number of entries in the dfaclent list */
 </div>
 <p id="section-4.6.2-5">These bit field values are also used in the "mask" element of the
 GETACL2args and GETACL3args structures.<a href="#section-4.6.2-5" class="pilcrow">¶</a></p>
+<div id="setacl-mask">
+<section id="section-4.6.2.1">
+            <h5 id="name-the-mask-element-in-a-setac">
+<a href="#section-4.6.2.1" class="section-number selfRef">4.6.2.1. </a><a href="#name-the-mask-element-in-a-setac" class="section-name selfRef">The "mask" Element in a SETACL Request</a>
+            </h5>
+<p id="section-4.6.2.1-1">In a GETACL request the "mask" element selects which fields
+the server fills in, as described in <a href="#getacl2" class="auto internal xref">Section 5.2.2</a> and
+<a href="#getacl3" class="auto internal xref">Section 6.3.2</a>. Implementations do not agree on what the
+element means in a SETACL request.<a href="#section-4.6.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.6.2.1-2">The Linux NFS server treats it as selective there as well.
+It replaces the object's access ACL only when NA_ACL is set,
+and the object's default ACL only when NA_DFACL is set,
+leaving an unselected list as it found it.<a href="#section-4.6.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.6.2.1-3">The Solaris NFS_ACL server does not consult the element on
+SETACL, and the outcome depends on the file system it
+exports. When that file system is UFS, the server stores
+exactly the entries the request carries, so the entries of a
+list the sender leaves empty are dropped from the object
+rather than preserved. When it is ZFS, the server returns
+ACL2ERR_NOTSUPP or ACL3ERR_NOTSUPP as described in
+<a href="#no-acl-support" class="auto internal xref">Section 4.6.3.3</a>.<a href="#section-4.6.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.6.2.1-4">A SETACL that sets one of the two bits and clears the other
+therefore has no single meaning. Sent to a directory that
+holds both an access ACL and a default ACL, it preserves the
+unselected list on a Linux server and drops that list's
+entries on a Solaris server exporting UFS.<a href="#section-4.6.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.6.2.1-5">A client avoids the divergence by setting both bits and
+sending both lists on every SETACL, reading back the list it
+does not intend to change so that it can send that list
+unaltered. The Linux NFS client does this: it sets NA_ACL on
+every SETACL, adds NA_DFACL for a directory, and fetches the
+sibling list before sending.<a href="#section-4.6.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-4.6.2.1-6"><span class="cref" id="open-setacl-mask">
+This section records the divergence rather than recommending
+one behavior. A client that follows the last paragraph is
+safe against either server, but a server implementer is left
+without an answer. Does the working group want to choose
+one? See repository issue #1.
+<span class="crefSource">editor</span></span><a href="#section-4.6.2.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="interoperability-considerations">
@@ -2179,7 +2255,7 @@ the access control on file objects.<a href="#section-4.6.3.2-1" class="pilcrow">
 <p id="section-4.6.3.2-2">This is a quality of implementation issue for the client.<a href="#section-4.6.3.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="client-implements-exported-file-system-does-not">
+<div id="no-acl-support">
 <section id="section-4.6.3.3">
             <h5 id="name-client-implements-exported-">
 <a href="#section-4.6.3.3" class="section-number selfRef">4.6.3.3. </a><a href="#name-client-implements-exported-" class="section-name selfRef">Client Implements, Exported File System Does Not</a>
@@ -2189,27 +2265,43 @@ share both file systems that implement ACLs and
 file systems that do not. In this case, NFS clients
 detect the presence of an NFS_ACL service on the NFS
 server.<a href="#section-4.6.3.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.6.3.3-2">For file objects that do not implement ACL support:<a href="#section-4.6.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.6.3.3-2">This is not an unusual case. A Solaris server exporting a
+ZFS file system behaves as this section describes for every
+object it shares: GETACL returns a manufactured ACL, and
+SETACL fails. The behavior described here is therefore the
+ordinary one for a Solaris server on its default file
+system, not a fallback reserved for file systems without
+access control.<a href="#section-4.6.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.6.3.3-3">For file objects that do not implement ACL support:<a href="#section-4.6.3.3-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.6.3.3-3.1">
-                <p id="section-4.6.3.3-3.1.1">The server responds to a GETACL procedure by returning
-a manufactured minimal ACL (i.e., only three ACEs) that
-reflects the current mode bits of the object.<a href="#section-4.6.3.3-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.6.3.3-4.1">
+                <p id="section-4.6.3.3-4.1.1">The server responds to a GETACL procedure by returning
+a manufactured minimal ACL that reflects the current mode
+bits of the object. Both surveyed servers manufacture four
+Access Control Entries in the "aclent" array and leave the
+"dfaclent" array empty; neither manufactures a default ACL.
+The Solaris server departs from the rules given in
+<a href="#acls-in-operation" class="auto internal xref">Section 3.5.4.2</a> on this path. It sets the
+NA_CLASS_OBJ entry's "perm" element to the constant value 7
+rather than deriving it from the owning group's permission
+bits, and it emits the entries in the order NA_USER_OBJ,
+NA_GROUP_OBJ, NA_OTHER_OBJ, NA_CLASS_OBJ, which is not
+ascending order of "type" value.<a href="#section-4.6.3.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-4.6.3.3-3.2">
-                <p id="section-4.6.3.3-3.2.1">The server responds to a SETACL version 3 procedure by
-returning ACL3ERR_NOTSUPP.<a href="#section-4.6.3.3-3.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-4.6.3.3-4.2">
+                <p id="section-4.6.3.3-4.2.1">The server responds to a SETACL version 3 procedure by
+returning ACL3ERR_NOTSUPP.<a href="#section-4.6.3.3-4.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-4.6.3.3-3.3">
-                <p id="section-4.6.3.3-3.3.1">The server responds to a SETACL version 2 procedure by
-returning ACL2ERR_NOTSUPP.<a href="#section-4.6.3.3-3.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-4.6.3.3-4.3">
+                <p id="section-4.6.3.3-4.3.1">The server responds to a SETACL version 2 procedure by
+returning ACL2ERR_NOTSUPP.<a href="#section-4.6.3.3-4.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-4.6.3.3-4">The Linux NFS server deviates from the protocol specified in the
+<p id="section-4.6.3.3-5">The Linux NFS server deviates from the protocol specified in the
 current document by returning the value 10004 (the NFS version 3
 NFS3ERR_NOTSUPP value) rather than the value 45 that this document
 assigns to ACL2ERR_NOTSUPP, in response to a SETACL version 2
-procedure on a file system that does not support ACLs.<a href="#section-4.6.3.3-4" class="pilcrow">¶</a></p>
+procedure on a file system that does not support ACLs.<a href="#section-4.6.3.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2487,7 +2579,7 @@ settings.<a href="#section-5.2.1.5-1" class="pilcrow">¶</a></p>
 </div>
 </section>
 </div>
-<div id="procedure-1-getacl-retrieve-an-access-control-list">
+<div id="getacl2">
 <section id="section-5.2.2">
           <h4 id="name-procedure-1-getacl-retrieve">
 <a href="#section-5.2.2" class="section-number selfRef">5.2.2. </a><a href="#name-procedure-1-getacl-retrieve" class="section-name selfRef">Procedure 1: GETACL - Retrieve an Access Control List</a>
@@ -2690,6 +2782,9 @@ setting SETACL2res.status to ACL2ERR_NOTSUPP.<a href="#section-5.2.3.4-4" class=
 set of ACEs (as described in <a href="#acls-in-operation" class="auto internal xref">Section 3.5.4.2</a>), the
 server responds by setting SETACL2res.status to
 ACL2ERR_INVAL.<a href="#section-5.2.3.4-5" class="pilcrow">¶</a></p>
+<p id="section-5.2.3.4-6">Servers differ in how they treat the "mask" element of
+SETACL2args.acl. <a href="#setacl-mask" class="auto internal xref">Section 4.6.2.1</a> describes the divergence
+and how a client avoids it.<a href="#section-5.2.3.4-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="errors-2">
@@ -3513,7 +3608,7 @@ based on security or authentication policy settings.<a href="#section-6.3.1.5-1"
 </div>
 </section>
 </div>
-<div id="procedure-1-getacl-retrieve-an-access-control-list-1">
+<div id="getacl3">
 <section id="section-6.3.2">
           <h4 id="name-procedure-1-getacl-retrieve-">
 <a href="#section-6.3.2" class="section-number selfRef">6.3.2. </a><a href="#name-procedure-1-getacl-retrieve-" class="section-name selfRef">Procedure 1: GETACL - Retrieve an Access Control List</a>
@@ -3735,6 +3830,9 @@ by setting SETACL3res.status to ACL3ERR_NOTSUPP.<a href="#section-6.3.3.4-4" cla
 minimal set of ACEs (as described in
 <a href="#acls-in-operation" class="auto internal xref">Section 3.5.4.2</a>), the server responds by setting
 SETACL3res.status to ACL3ERR_INVAL.<a href="#section-6.3.3.4-5" class="pilcrow">¶</a></p>
+<p id="section-6.3.3.4-6">Servers differ in how they treat the "mask" element of
+SETACL3args.acl. <a href="#setacl-mask" class="auto internal xref">Section 4.6.2.1</a> describes the divergence
+and how a client avoids it.<a href="#section-6.3.3.4-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="errors-8">
@@ -3973,7 +4071,7 @@ list, before doing its access checking. A server implementation
 may provide a mechanism to change this mapping.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="duplicate-request-cache">
+<div id="dup-req-cache">
 <section id="section-7.2">
         <h3 id="name-duplicate-request-cache">
 <a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-duplicate-request-cache" class="section-name selfRef">Duplicate Request Cache</a>
@@ -4651,14 +4749,141 @@ the separate XDR descriptions in <a href="#nfs-acl-v2-xdr" class="auto internal 
       <h2 id="name-security-considerations">
 <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-10-1">An attacker can alter the content of an ACL as it transits
-an open network, giving the attacker access to file content
-that the ACL is supposed to protect.<a href="#section-10-1" class="pilcrow">¶</a></p>
-<p id="section-10-2">Therefore, implementations of NFS_ACL should protect the
-integrity of ACL content when it transits a network. The
-use of an integrity-preserving transport layer security
-service, such as the GSS Kerberos integrity service, is
-strongly recommended.<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-1">NFS_ACL was designed for a single administrative domain on
+a physically protected network. This section considers a
+broader environment: deployment across the global Internet,
+spanning administrative boundaries, with no firewall assumed
+between a client and its server.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-2">NFS_ACL carries no security mechanism of its own. It
+inherits what the RPC layer provides, and it names the users
+and groups in an Access Control Entry using the identities
+that layer supplies (see <a href="#auth-and-authz" class="auto internal xref">Section 3.4</a>). What follows
+therefore turns on the choice of RPC authentication flavor
+and transport.<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-3">Attacks on the NFS version 2 and version 3 protocols
+themselves are out of scope. An attacker who can read or
+alter file content directly through NFS gains nothing by
+attacking the ACL that governs it, and <span>[<a href="#RFC2623" class="cite xref">RFC2623</a>]</span> covers
+those protocols. Attacks on the local file system that
+stores an ACL, and on the mechanism by which a site maps
+users to uid and gid values, are out of scope as well.<a href="#section-10-3" class="pilcrow">¶</a></p>
+<div id="attacks-on-an-unprotected-exchange">
+<section id="section-10.1">
+        <h3 id="name-attacks-on-an-unprotected-e">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-attacks-on-an-unprotected-e" class="section-name selfRef">Attacks on an Unprotected Exchange</a>
+        </h3>
+<p id="section-10.1-1">Running NFS_ACL over AUTH_SYS on an unprotected transport
+defends against none of the following.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-10.1-2">
+          <dt id="section-10.1-2.1">Eavesdropping:</dt>
+          <dd style="margin-left: 1.5em" id="section-10.1-2.2">
+            <p id="section-10.1-2.2.1">A GETACL reply carries an object's full Access Control
+List. An observer learns which users and groups hold access
+to the object, and the uid and gid values that name them.
+The list is worth reading even when the file content is not.<a href="#section-10.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-10.1-2.3">Modification and man-in-the-middle:</dt>
+          <dd style="margin-left: 1.5em" id="section-10.1-2.4">
+            <p id="section-10.1-2.4.1">Altering a SETACL argument changes the access control the
+server installs. Altering a GETACL reply gives the client a
+false view of it. Altering an ACCESS reply misleads a client
+that uses the result to decide whether to attempt an
+operation.<a href="#section-10.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-10.1-2.5">Message insertion:</dt>
+          <dd style="margin-left: 1.5em" id="section-10.1-2.6">
+            <p id="section-10.1-2.6.1">AUTH_SYS supplies no verifier by which a credential can be
+validated (<span><a href="https://rfc-editor.org/rfc/rfc5531#section-14" class="relref">Section 14</a> of [<a href="#RFC5531" class="cite xref">RFC5531</a>]</span>). An attacker who can
+reach the server and holds a file handle for an object can
+forge a SETACL request bearing the file owner's uid.<a href="#section-10.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-10.1-2.7">Replay:</dt>
+          <dd style="margin-left: 1.5em" id="section-10.1-2.8">
+            <p id="section-10.1-2.8.1">SETACL is not idempotent. A replayed SETACL reinstates an
+ACL that the file owner has since replaced. The duplicate
+request cache (<a href="#dup-req-cache" class="auto internal xref">Section 7.2</a>) recognizes a
+retransmission, but it is finite: a replay delayed beyond
+its reach is processed as a new request.<a href="#section-10.1-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-10.1-2.9">Message deletion and denial of service:</dt>
+          <dd style="margin-left: 1.5em" id="section-10.1-2.10">
+            <p id="section-10.1-2.10.1">Discarding NFS_ACL messages denies a client the ability to
+read or change an ACL. An attacker positioned to do this can
+discard the NFS traffic alongside it, so NFS_ACL neither
+adds to nor reduces the exposure.<a href="#section-10.1-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-10.1-3"><span><a href="https://rfc-editor.org/rfc/rfc5531#section-14" class="relref">Section 14</a> of [<a href="#RFC5531" class="cite xref">RFC5531</a>]</span> states that AUTH_SYS should not be
+used for services that permit clients to modify data. SETACL
+modifies the data that governs every other access to the
+object. <a href="#rpc-authentication" class="auto internal xref">Section 4.1</a> reports that implementations
+permit any authentication flavor on procedures other than
+NULL. That records what implementations accept; it does not
+recommend AUTH_SYS for SETACL.<a href="#section-10.1-3" class="pilcrow">¶</a></p>
+<p id="section-10.1-4"><span class="cref" id="open-authsys-setacl">
+This paragraph stops short of a recommendation. The
+alternative is to state that a server should refuse SETACL
+under AUTH_SYS, which no surveyed implementation does. Does
+the working group want a recommendation here? See repository
+issue #3.
+<span class="crefSource">editor</span></span><a href="#section-10.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="protecting-an-exchange">
+<section id="section-10.2">
+        <h3 id="name-protecting-an-exchange">
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-protecting-an-exchange" class="section-name selfRef">Protecting an Exchange</a>
+        </h3>
+<p id="section-10.2-1">Two mechanisms available to an NFS version 2 or version 3
+deployment apply unchanged to NFS_ACL, which shares the
+transport and port of the NFS service it accompanies.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-2">RPCSEC_GSS <span>[<a href="#RFC2203" class="cite xref">RFC2203</a>]</span> <span>[<a href="#RFC7861" class="cite xref">RFC7861</a>]</span> replaces AUTH_SYS with a
+GSS-API mechanism. Its integrity service authenticates the
+RPC peer and detects alteration of each call and reply,
+addressing insertion, modification, and man-in-the-middle.
+Per-request sequence numbers detect replay within a window
+the server sizes. Integrity leaves ACL content readable on
+the wire; the privacy service encrypts arguments and results
+and closes that gap. <span>[<a href="#RFC2623" class="cite xref">RFC2623</a>]</span> describes how the NFS
+version 2 and version 3 protocols use RPCSEC_GSS and
+Kerberos V5.<a href="#section-10.2-2" class="pilcrow">¶</a></p>
+<p id="section-10.2-3">RPC-over-TLS <span>[<a href="#RFC9289" class="cite xref">RFC9289</a>]</span> protects the transport connection
+rather than the individual RPC message. It supplies
+confidentiality and integrity for everything on the
+connection and can authenticate the peer host. It does not
+authenticate the RPC user, so a server relying on it alone
+still takes on trust the uid and gid each request carries.<a href="#section-10.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="residual-risk">
+<section id="section-10.3">
+        <h3 id="name-residual-risk">
+<a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-residual-risk" class="section-name selfRef">Residual Risk</a>
+        </h3>
+<p id="section-10.3-1">Neither mechanism changes what an authenticated caller may
+do. GETACL carries no permission check of its own (see
+<a href="#auth-and-authz" class="auto internal xref">Section 3.4</a>), so a caller holding a file handle can
+often read the object's ACL and the user and group IDs it
+names. A deployment that treats ACL membership as sensitive
+cannot rely on the protocol to withhold it.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
+<p id="section-10.3-2">A server that maps a privileged caller to a less privileged
+identity (see <a href="#permission-issues" class="auto internal xref">Section 7.1</a>) decides on the strength
+of the uid the request carries. Under AUTH_SYS the client
+supplies that value, so the mapping deters accident rather
+than attack.<a href="#section-10.3-2" class="pilcrow">¶</a></p>
+<p id="section-10.3-3">An ACL a client has read, and the result of an ACCESS
+procedure, describe the server's decision at the moment it
+was made. The server alone authorizes access (see
+<a href="#interpreting-acls" class="auto internal xref">Section 3.5.4.1</a>) and can revoke it at any time. A
+client that caches either and relies on it later may be
+relying on information that no longer holds.<a href="#section-10.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="iana-considerations">
@@ -4752,13 +4977,29 @@ the current document as a Reference.<a href="#section-11-1" class="pilcrow">¶</
         <dd>
 <span class="refAuthor">Srinivasan, R.</span>, <span class="refTitle">"Binding Protocols for ONC RPC Version 2"</span>, <span class="seriesInfo">RFC 1833</span>, <span class="seriesInfo">DOI 10.17487/RFC1833</span>, <time datetime="1995-08" class="refDate">August 1995</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1833">https://www.rfc-editor.org/rfc/rfc1833</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC2203">[RFC2203]</dt>
+        <dd>
+<span class="refAuthor">Eisler, M.</span>, <span class="refAuthor">Chiu, A.</span>, and <span class="refAuthor">L. Ling</span>, <span class="refTitle">"RPCSEC_GSS Protocol Specification"</span>, <span class="seriesInfo">RFC 2203</span>, <span class="seriesInfo">DOI 10.17487/RFC2203</span>, <time datetime="1997-09" class="refDate">September 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2203">https://www.rfc-editor.org/rfc/rfc2203</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2623">[RFC2623]</dt>
+        <dd>
+<span class="refAuthor">Eisler, M.</span>, <span class="refTitle">"NFS Version 2 and Version 3 Security Issues and the NFS Protocol's Use of RPCSEC_GSS and Kerberos V5"</span>, <span class="seriesInfo">RFC 2623</span>, <span class="seriesInfo">DOI 10.17487/RFC2623</span>, <time datetime="1999-06" class="refDate">June 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2623">https://www.rfc-editor.org/rfc/rfc2623</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC7530">[RFC7530]</dt>
         <dd>
 <span class="refAuthor">Haynes, T., Ed.</span> and <span class="refAuthor">D. Noveck, Ed.</span>, <span class="refTitle">"Network File System (NFS) Version 4 Protocol"</span>, <span class="seriesInfo">RFC 7530</span>, <span class="seriesInfo">DOI 10.17487/RFC7530</span>, <time datetime="2015-03" class="refDate">March 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7530">https://www.rfc-editor.org/rfc/rfc7530</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7861">[RFC7861]</dt>
+        <dd>
+<span class="refAuthor">Adamson, A.</span> and <span class="refAuthor">N. Williams</span>, <span class="refTitle">"Remote Procedure Call (RPC) Security Version 3"</span>, <span class="seriesInfo">RFC 7861</span>, <span class="seriesInfo">DOI 10.17487/RFC7861</span>, <time datetime="2016-11" class="refDate">November 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7861">https://www.rfc-editor.org/rfc/rfc7861</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8881">[RFC8881]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Noveck, D., Ed.</span> and <span class="refAuthor">C. Lever</span>, <span class="refTitle">"Network File System (NFS) Version 4 Minor Version 1 Protocol"</span>, <span class="seriesInfo">RFC 8881</span>, <span class="seriesInfo">DOI 10.17487/RFC8881</span>, <time datetime="2020-08" class="refDate">August 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8881">https://www.rfc-editor.org/rfc/rfc8881</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9289">[RFC9289]</dt>
+      <dd>
+<span class="refAuthor">Myklebust, T.</span> and <span class="refAuthor">C. Lever, Ed.</span>, <span class="refTitle">"Towards Remote Procedure Call Encryption by Default"</span>, <span class="seriesInfo">RFC 9289</span>, <span class="seriesInfo">DOI 10.17487/RFC9289</span>, <time datetime="2022-09" class="refDate">September 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9289">https://www.rfc-editor.org/rfc/rfc9289</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -4856,10 +5097,8 @@ for their input and support.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <p id="appendix-B-2">Special thanks to
 Area Director
 Gorry Fairhurst,
-NFSV4 Working Group Chairs
-Brian Pawlowski
-and
-Christopher Inacio,
+NFSV4 Working Group Chair
+Brian Pawlowski,
 and
 NFSV4 Working Group Secretary
 Thomas Haynes
