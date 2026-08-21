@@ -2906,10 +2906,8 @@ for their input and support.
 Special thanks to
 Area Director
 Gorry Fairhurst,
-NFSV4 Working Group Chairs
-Brian Pawlowski
-and
-Christopher Inacio,
+NFSV4 Working Group Chair
+Brian Pawlowski,
 and
 NFSV4 Working Group Secretary
 Thomas Haynes
