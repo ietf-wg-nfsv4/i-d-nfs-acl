@@ -477,6 +477,15 @@ element value. Some receivers depend on this ordering. The
 manufactured ACL described in {{no-acl-support}} is the one
 exception among the implementations this document surveys.
 
+<cref anchor="open-fabricated-acl" source="editor">
+The Solaris entry order and class permission are described
+in <xref target="no-acl-support"/> as behavior, not
+identified as defects. If the working group reads either as
+a bug to report rather than a variation to document, this
+text and <xref target="no-acl-support"/> should say so. See
+repository issue #2.
+</cref>
+
 When a client presents a SETACL operation that a server
 finds is invalid or it cannot process, the server responds
 with ACL2ERR_INVAL or ACL3ERR_INVAL, depending on the version
@@ -735,6 +744,14 @@ does not intend to change so that it can send that list
 unaltered. The Linux NFS client does this: it sets NA_ACL on
 every SETACL, adds NA_DFACL for a directory, and fetches the
 sibling list before sending.
+
+<cref anchor="open-setacl-mask" source="editor">
+This section records the divergence rather than recommending
+one behavior. A client that follows the last paragraph is
+safe against either server, but a server implementer is left
+without an answer. Does the working group want to choose
+one? See repository issue #1.
+</cref>
 
 ### Interoperability Considerations
 
@@ -2754,6 +2771,14 @@ object. {{rpc-authentication}} reports that implementations
 permit any authentication flavor on procedures other than
 NULL. That records what implementations accept; it does not
 recommend AUTH_SYS for SETACL.
+
+<cref anchor="open-authsys-setacl" source="editor">
+This paragraph stops short of a recommendation. The
+alternative is to state that a server should refuse SETACL
+under AUTH_SYS, which no surveyed implementation does. Does
+the working group want a recommendation here? See repository
+issue #3.
+</cref>
 
 ## Protecting an Exchange
 
