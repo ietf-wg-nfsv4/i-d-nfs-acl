@@ -37,8 +37,12 @@ normative:
 informative:
   RFC1094:
   RFC1813:
+  RFC2203:
+  RFC2623:
   RFC7530:
+  RFC7861:
   RFC8881:
+  RFC9289:
   Gruenbacher:
     title: POSIX Access Control Lists on Linux
     author:
@@ -370,7 +374,7 @@ Mode bits, as explained in the previous section, are essentially an
 ACL that always contains exactly three ACEs: one for the file's owner,
 one for the file's owner group, and one for everyone else.
 
-#### Interpreting Access Control Lists
+#### Interpreting Access Control Lists {#interpreting-acls}
 
 NFS clients do not perform access checks based on their
 interpretation of an ACL read from the server. NFS servers
@@ -586,7 +590,7 @@ specifies the content and behavior of ACLs.
 
 # Protocol Elements Common to Both Versions
 
-## RPC Authentication
+## RPC Authentication {#rpc-authentication}
 
 The NFS_ACL service uses AUTH_NONE in the NULL procedure.
 All RPC authentication flavors may be used for other procedures.
@@ -1953,7 +1957,7 @@ field.
 
 # Implementation Issues
 
-## Permission issues
+## Permission issues {#permission-issues}
 
 The NFS protocol, strictly speaking, does not
 define the permission checking used by NFS servers. However, it
@@ -1988,7 +1992,7 @@ value (for instance, UID_NOBODY), as well as mapping the groups
 list, before doing its access checking. A server implementation
 may provide a mechanism to change this mapping.
 
-## Duplicate Request Cache
+## Duplicate Request Cache {#dup-req-cache}
 
 The typical NFS protocol failure recovery model
 uses client time-out and retry to handle server crashes,
@@ -2643,22 +2647,117 @@ the separate XDR descriptions in {{nfs-acl-v2-xdr}} and
 
 # Security Considerations
 
-An object's ACL names the users and groups that have been
-granted access to that object. Because the GETACL procedure
-leaves it to the local file system to restrict who may read
-an ACL (see {{auth-and-authz}}), a caller that holds a file
-handle for an object can often read that object's ACL, and
-with it the user and group IDs the ACL names.
+NFS_ACL was designed for a single administrative domain on
+a physically protected network. This section considers a
+broader environment: deployment across the global Internet,
+spanning administrative boundaries, with no firewall assumed
+between a client and its server.
 
-An attacker can alter the content of an ACL as it transits
-an open network, giving the attacker access to file content
-that the ACL is supposed to protect.
+NFS_ACL carries no security mechanism of its own. It
+inherits what the RPC layer provides, and it names the users
+and groups in an Access Control Entry using the identities
+that layer supplies (see {{auth-and-authz}}). What follows
+therefore turns on the choice of RPC authentication flavor
+and transport.
 
-Therefore, implementations of NFS_ACL should protect the
-integrity of ACL content when it transits a network. The
-use of an integrity-preserving transport layer security
-service, such as the GSS Kerberos integrity service, is
-strongly recommended.
+Attacks on the NFS version 2 and version 3 protocols
+themselves are out of scope. An attacker who can read or
+alter file content directly through NFS gains nothing by
+attacking the ACL that governs it, and {{RFC2623}} covers
+those protocols. Attacks on the local file system that
+stores an ACL, and on the mechanism by which a site maps
+users to uid and gid values, are out of scope as well.
+
+## Attacks on an Unprotected Exchange
+
+Running NFS_ACL over AUTH_SYS on an unprotected transport
+defends against none of the following.
+
+Eavesdropping:
+: A GETACL reply carries an object's full Access Control
+List. An observer learns which users and groups hold access
+to the object, and the uid and gid values that name them.
+The list is worth reading even when the file content is not.
+
+Modification and man-in-the-middle:
+: Altering a SETACL argument changes the access control the
+server installs. Altering a GETACL reply gives the client a
+false view of it. Altering an ACCESS reply misleads a client
+that uses the result to decide whether to attempt an
+operation.
+
+Message insertion:
+: AUTH_SYS supplies no verifier by which a credential can be
+validated ({{Section 14 of RFC5531}}). An attacker who can
+reach the server and holds a file handle for an object can
+forge a SETACL request bearing the file owner's uid.
+
+Replay:
+: SETACL is not idempotent. A replayed SETACL reinstates an
+ACL that the file owner has since replaced. The duplicate
+request cache ({{dup-req-cache}}) recognizes a
+retransmission, but it is finite: a replay delayed beyond
+its reach is processed as a new request.
+
+Message deletion and denial of service:
+: Discarding NFS_ACL messages denies a client the ability to
+read or change an ACL. An attacker positioned to do this can
+discard the NFS traffic alongside it, so NFS_ACL neither
+adds to nor reduces the exposure.
+
+{{Section 14 of RFC5531}} states that AUTH_SYS should not be
+used for services that permit clients to modify data. SETACL
+modifies the data that governs every other access to the
+object. {{rpc-authentication}} reports that implementations
+permit any authentication flavor on procedures other than
+NULL. That records what implementations accept; it does not
+recommend AUTH_SYS for SETACL.
+
+## Protecting an Exchange
+
+Two mechanisms available to an NFS version 2 or version 3
+deployment apply unchanged to NFS_ACL, which shares the
+transport and port of the NFS service it accompanies.
+
+RPCSEC_GSS {{RFC2203}} {{RFC7861}} replaces AUTH_SYS with a
+GSS-API mechanism. Its integrity service authenticates the
+RPC peer and detects alteration of each call and reply,
+addressing insertion, modification, and man-in-the-middle.
+Per-request sequence numbers detect replay within a window
+the server sizes. Integrity leaves ACL content readable on
+the wire; the privacy service encrypts arguments and results
+and closes that gap. {{RFC2623}} describes how the NFS
+version 2 and version 3 protocols use RPCSEC_GSS and
+Kerberos V5.
+
+RPC-over-TLS {{RFC9289}} protects the transport connection
+rather than the individual RPC message. It supplies
+confidentiality and integrity for everything on the
+connection and can authenticate the peer host. It does not
+authenticate the RPC user, so a server relying on it alone
+still takes on trust the uid and gid each request carries.
+
+## Residual Risk
+
+Neither mechanism changes what an authenticated caller may
+do. GETACL carries no permission check of its own (see
+{{auth-and-authz}}), so a caller holding a file handle can
+often read the object's ACL and the user and group IDs it
+names. A deployment that treats ACL membership as sensitive
+cannot rely on the protocol to withhold it.
+
+A server that maps a privileged caller to a less privileged
+identity (see {{permission-issues}}) decides on the strength
+of the uid the request carries. Under AUTH_SYS the client
+supplies that value, so the mapping deters accident rather
+than attack.
+
+An ACL a client has read, and the result of an ACCESS
+procedure, describe the server's decision at the moment it
+was made. The server alone authorizes access (see
+{{interpreting-acls}}) and can revoke it at any time. A
+client that caches either and relies on it later may be
+relying on information that no longer holds.
 
 # IANA Considerations
 
