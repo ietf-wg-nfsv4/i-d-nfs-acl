@@ -218,20 +218,22 @@ service procedures that an NFS_ACL server provides.
 Readers can find a full guide to XDR and the RPC Data Description
 Language in {{RFC4506}}.
 
-### Extensions to RFC 4506
+### XDR Types Not Defined in RFC 4506
 
-The original NFS_ACL version 2 RPC language specification includes the use of
-the "unsigned short" type. This type is not described in {{RFC4506}}. However,
-most current implementations of the rpcgen program implement support for
-this type. This section provides a proper specification for "short" and
-"unsigned short" integer types for the RPC language, based on those
-implementations. This is so that the NFS_ACL version 2 RPC language
-specification appearing in this document accurately reflects the wire behavior
-of existing implementations.
+The original NFS_ACL RPC language specification uses the "unsigned short" and
+"unsigned long" types. {{RFC4506}} describes neither, though most current
+implementations of the rpcgen program accept both. This section describes the
+"unsigned short" and "unsigned long" integer types as used in this document,
+based on those implementations, so that the NFS_ACL RPC language specification
+appearing here accurately reflects the wire behavior of existing
+implementations. It does not add these types to the RPC Data Description
+Language.
 
-The XDR wire representation of both types is a network-endian 32-bit integer,
-sign-extended. This maintains XDR's consistent 4-octet alignment for all basic
+The XDR wire representation of each of these types is a network-endian 32-bit
+integer. This maintains XDR's consistent 4-octet alignment for all basic
 integer types while allowing applications to use narrower types internally.
+The subsections below describe how a value of each type occupies that 32-bit
+field.
 
 #### unsigned short
 
@@ -241,18 +243,16 @@ inclusive.
 
 Example: 0xFFFF (65535) appears as 0x0000FFFF on the wire.
 
-#### signed short
+#### unsigned long
 
-The short type is sign-extended, with the high-order two octets replicating
-the sign bit. The value range of this type is -32768 to 32767, inclusive.
+The unsigned long type occupies all four octets of the 32-bit field and
+requires no extension. Its wire representation is identical to that of the
+"unsigned int" type described in {{Section 4.2 of RFC4506}}. The value range
+of this type is zero to 4,294,967,295, inclusive.
 
-When a signed short contains a positive or zero value, its high-order octets
-each contain 0x00. For example: 0x7FFF (32767) appears as 0x00007FFF on the
-wire.
-
-When a signed short contains a negative value, its high-order octets each
-contain 0xFF. For example: 0xFFFF (-1) appears as 0xFFFFFFFF on the wire,
-and 0x8000 (-32768) appears as 0xFFFF8000 on the wire.
+The NFS version 3 protocol specification {{RFC1813}} uses this type name for
+32-bit unsigned quantities, and this document retains it in the data types
+that it inherits from that protocol.
 
 ## Authentication and Authorization
 
