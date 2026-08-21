@@ -448,16 +448,30 @@ three ACEs is referred to as a minimal NFS ACL.
 An NFS ACL may have zero or more NA_USER and/or NA_GROUP
 ACEs.
 
-On the wire, a minimal NFS ACL is represented as four
-Access Control Entries rather than three. Along with the
-NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ entries, the
-sender synthesizes an NA_CLASS_OBJ entry whose "perm"
-element is derived from the permission bits of the object's
-owning group.
+On the wire, a minimal NFS ACL is represented as either
+three Access Control Entries or four. A sender that uses
+four adds an NA_CLASS_OBJ entry to the NA_USER_OBJ,
+NA_GROUP_OBJ, and NA_OTHER_OBJ entries, and derives that
+entry's "perm" element from the permission bits of the
+object's owning group. The Linux NFS server expands a
+three-entry list this way in both the "aclent" and the
+"dfaclent" array.
+
+The Solaris NFS_ACL server performs no such expansion, and
+what it sends depends on the file system it exports. A
+Solaris server exporting a ZFS file system sends the
+manufactured ACL described in {{no-acl-support}}, which
+always occupies four entries in the "aclent" array and none
+in the "dfaclent" array. A Solaris server exporting a UFS
+file system sends three entries for an object whose ACL has
+no mask entry. A receiver accepts either representation in
+either array.
 
 The Access Control Entries in each of the "aclent" and
 "dfaclent" arrays appear in ascending order of their "type"
-element value. Some receivers depend on this ordering.
+element value. Some receivers depend on this ordering. The
+manufactured ACL described in {{no-acl-support}} is the one
+exception among the implementations this document surveys.
 
 When a client presents a SETACL operation that a server
 finds is invalid or it cannot process, the server responds
@@ -717,7 +731,7 @@ the access control on file objects.
 
 This is a quality of implementation issue for the client.
 
-#### Client Implements, Exported File System Does Not
+#### Client Implements, Exported File System Does Not {#no-acl-support}
 
 An NFS server that implements the NFS_ACL protocol might
 share both file systems that implement ACLs and
@@ -725,11 +739,28 @@ file systems that do not. In this case, NFS clients
 detect the presence of an NFS_ACL service on the NFS
 server.
 
+This is not an unusual case. A Solaris server exporting a
+ZFS file system behaves as this section describes for every
+object it shares: GETACL returns a manufactured ACL, and
+SETACL fails. The behavior described here is therefore the
+ordinary one for a Solaris server on its default file
+system, not a fallback reserved for file systems without
+access control.
+
 For file objects that do not implement ACL support:
 
 * The server responds to a GETACL procedure by returning
-a manufactured minimal ACL (i.e., only three ACEs) that
-reflects the current mode bits of the object.
+a manufactured minimal ACL that reflects the current mode
+bits of the object. Both surveyed servers manufacture four
+Access Control Entries in the "aclent" array and leave the
+"dfaclent" array empty; neither manufactures a default ACL.
+The Solaris server departs from the rules given in
+{{acls-in-operation}} on this path. It sets the
+NA_CLASS_OBJ entry's "perm" element to the constant value 7
+rather than deriving it from the owning group's permission
+bits, and it emits the entries in the order NA_USER_OBJ,
+NA_GROUP_OBJ, NA_OTHER_OBJ, NA_CLASS_OBJ, which is not
+ascending order of "type" value.
 
 * The server responds to a SETACL version 3 procedure by
 returning ACL3ERR_NOTSUPP.
