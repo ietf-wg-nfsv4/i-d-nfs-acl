@@ -254,7 +254,7 @@ The NFS version 3 protocol specification {{RFC1813}} uses this type name for
 32-bit unsigned quantities, and this document retains it in the data types
 that it inherits from that protocol.
 
-## Authentication and Authorization
+## Authentication and Authorization {#auth-and-authz}
 
 The RPC protocol includes fields in every procedure call for
 user authentication parameters. The specific content of the
@@ -266,10 +266,12 @@ of the mechanics of RPC user authentication appears in
 For NFS ACLs, the user ID carried in RPC calls is used
 for two purposes:
 
-* When setting an ACL via the SETACL procedure or retrieving
-an ACL via the GETACL procedure, the NFS_ACL service verifies
-that the calling user has been granted permission to perform
-the procedure.
+* When setting an ACL via the SETACL procedure, the NFS_ACL
+service verifies that the calling user has been granted
+permission to perform the procedure. The GETACL procedure
+carries no such check of its own. The server passes the
+calling user's credential to the local file system, which
+may or may not restrict who can read an object's ACL.
 
 * Each Access Control Entry (see below) contains an element
 that identifies the user to which the ACE applies. That
@@ -2609,6 +2611,13 @@ the separate XDR descriptions in {{nfs-acl-v2-xdr}} and
 {{nfs-acl-v3-xdr}} instead.
 
 # Security Considerations
+
+An object's ACL names the users and groups that have been
+granted access to that object. Because the GETACL procedure
+leaves it to the local file system to restrict who may read
+an ACL (see {{auth-and-authz}}), a caller that holds a file
+handle for an object can often read that object's ACL, and
+with it the user and group IDs the ACL names.
 
 An attacker can alter the content of an ACL as it transits
 an open network, giving the attacker access to file content
