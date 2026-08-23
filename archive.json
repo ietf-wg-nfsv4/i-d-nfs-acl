@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-08-20T01:41:39.721796+00:00",
+  "timestamp": "2026-08-23T01:49:59.391482+00:00",
   "repo": "ietf-wg-nfsv4/i-d-nfs-acl",
   "labels": [
     {
@@ -49,6 +49,55 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOMvnat88AAAABNwEJig",
+      "title": "SETACL: secattr.mask has no specified meaning, and implementations differ",
+      "url": "https://github.com/ietf-wg-nfsv4/i-d-nfs-acl/issues/1",
+      "state": "OPEN",
+      "author": "chucklever",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Drafted with AI assistance. I set the scope and framing and reviewed the text; the behavioral claims come from source reading the assistant performed, which I have not repeated independently.\n\nSection 4.6.2 defines the four bits of secattr.mask and ties them only to GETACL. Nothing says what a server does with the element on a SETACL, and the implementations differ.\n\nThe Linux NFS server treats it as selective, replacing the access ACL only when NA_ACL is set and the default ACL only when NA_DFACL is set. The Solaris NFS_ACL server ignores the element, and the outcome depends on the file system the server exports.\n\nWith UFS the server stores exactly the entries the request carries. A SETACL with NA_DFACL set and NA_ACL clear, sent to a directory that holds both lists, therefore preserves the access ACL on Linux and drops the access entries on Solaris over UFS.\n\nWith ZFS the question does not arise, because a SETACL to that server fails with NFS3ERR_NOTSUPP.\n\nMy current text for the next revision records the divergence and tells a client to set both bits and send both lists, reading back the list it is not changing. The Linux NFS client already does this, which is why the case does not arise between Linux peers.\n\nShould the document choose one behavior, or is recording the divergence the right outcome for an Informational description of a deployed protocol?\n",
+      "createdAt": "2026-08-21T20:09:40Z",
+      "updatedAt": "2026-08-21T20:32:29Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOMvnat88AAAABNwEMUw",
+      "title": "Manufactured minimal ACL: entry order and class permission",
+      "url": "https://github.com/ietf-wg-nfsv4/i-d-nfs-acl/issues/2",
+      "state": "OPEN",
+      "author": "chucklever",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Drafted with AI assistance. I set the scope and framing and reviewed the text; the behavioral claims come from source reading the assistant performed, which I have not repeated independently.\n\nSection 3.5.4.2 states that Access Control Entries appear in ascending order of type value, and that a synthesized NA_CLASS_OBJ entry derives its perm from the object's owning group. The ACL that a Solaris server manufactures follows neither rule, and on a ZFS-backed server that ACL is what every GETACL returns.\n\nThe manufactured ACL carries its four entries in the order NA_USER_OBJ, NA_GROUP_OBJ, NA_OTHER_OBJ, NA_CLASS_OBJ. Against the type values in Section 4.6.1 that is 0x1, 0x4, 0x20, 0x10. The class entry's perm is the constant 7. No default ACL is manufactured, and the default entry count is zero.\n\nA Solaris server manufactures an ACL whenever the exported file system cannot supply one in the form NFS_ACL carries, which for ZFS is every request. So this is not a fallback for file systems that lack ACL support, which is what Section 4.6.3.3's title leads a reader to expect. It is the ordinary GETACL path for Solaris on its default file system.\n\nThe Linux NFS server follows both rules on the same path.\n\nMy current text for the next revision describes the Solaris behavior in Section 4.6.3.3 and marks it an exception to the ordering rule. The alternative is to treat the entry order and the class permission as defects to report, and let Section 3.5.4.2 state its rules unqualified.\n\nWhich does the working group want?\n",
+      "createdAt": "2026-08-21T20:09:47Z",
+      "updatedAt": "2026-08-21T20:32:30Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 3,
+      "id": "I_kwDOMvnat88AAAABNwEMog",
+      "title": "Security Considerations: recommend against AUTH_SYS for SETACL?",
+      "url": "https://github.com/ietf-wg-nfsv4/i-d-nfs-acl/issues/3",
+      "state": "OPEN",
+      "author": "chucklever",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Drafted with AI assistance. I set the scope and framing and reviewed the text; the behavioral claims come from source reading the assistant performed, which I have not repeated independently.\n\nSection 14 of RFC 5531, a normative reference of this document, says AUTH_SYS SHOULD NOT be used for services that permit clients to modify data. SETACL modifies the data that governs every other access to an object. Section 4.1 says all RPC authentication flavors may be used on the procedures other than NULL. The document does not reconcile the two.\n\nNo surveyed implementation refuses a SETACL sent under AUTH_SYS, and Appendix A commits the document to matching existing implementations. RFC 5531 Section 14 goes on to say that AUTH_SYS \"MUST NOT be specified as RECOMMENDED or REQUIRED for any Standards Track RPC service\". That clause is limited to Standards Track work and does not reach an Informational document. The SHOULD NOT carries no such limit.\n\nWhat should Section 10 say: recommend that a server refuse SETACL under AUTH_SYS, note the tension without recommending, or leave it out?\n",
+      "createdAt": "2026-08-21T20:09:48Z",
+      "updatedAt": "2026-08-21T20:32:31Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": []
 }
