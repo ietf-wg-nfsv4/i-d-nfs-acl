@@ -154,17 +154,14 @@ ACLs between NFS clients and servers.
 
 # Conventions and Definitions
 
-{::boilerplate bcp14-tagged}
-
-As with most publications by standards bodies, this document
-has been published so that people may continue to create
-compatible implementations. However, note that, as an
-Informational document, this RFC does not make any compliance
+As an Informational document, this RFC does not make compliance
 mandates on implementations of the protocol described herein.
+Therefore it does not make use of the conformance language
+described in BCP 14 {{?RFC2119}} {{?RFC8174}}. A capitalized key
+word that appears in text quoted from another document carries
+the meaning that document gives it.
 
-# General Concepts
-
-## A Glossary of Useful Terms
+## Glossary
 
 The following are a set of foundational terms used throughout
 this document.
@@ -191,6 +188,8 @@ uid:
 
 user:
 : A person logged in on a client system.
+
+# General Concepts
 
 ## Remote Procedure Call
 
