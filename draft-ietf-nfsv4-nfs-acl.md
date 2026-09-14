@@ -1134,8 +1134,8 @@ on failure and no other results are returned.
 On success, the server does not send the reply until
 the ACL change is durable locally.
 
-Changing a file object's ACL changes the object's mtime.
-The mtime change is reflected in the attributes returned
+Changing a file object's ACL changes the object's ctime.
+The ctime change is reflected in the attributes returned
 in the SETACL response.
 
 A high-quality server implementation ensures that a
@@ -1867,8 +1867,8 @@ on failure and no other results are returned.
 On success, the server does not send the reply until
 the ACL change is durable locally.
 
-Changing a file object's ACL changes the object's mtime.
-The mtime change is reflected in the attributes returned
+Changing a file object's ACL changes the object's ctime.
+The ctime change is reflected in the attributes returned
 in the SETACL response.
 
 A high-quality server implementation ensures that a
