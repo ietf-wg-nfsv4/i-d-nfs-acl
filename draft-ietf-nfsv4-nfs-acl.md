@@ -1131,8 +1131,9 @@ on failure and no other results are returned.
 
 #### IMPLEMENTATION
 
-On success, the server does not send the reply until
-the ACL change is durable locally.
+A successful reply means that the exported file system has
+verified the new ACL, but does not mean that the change has
+reached stable storage.
 
 Changing a file object's ACL changes the object's ctime.
 The ctime change is reflected in the attributes returned
@@ -1864,8 +1865,9 @@ on failure and no other results are returned.
 
 #### IMPLEMENTATION
 
-On success, the server does not send the reply until
-the ACL change is durable locally.
+A successful reply means that the exported file system has
+verified the new ACL, but does not mean that the change has
+reached stable storage.
 
 Changing a file object's ACL changes the object's ctime.
 The ctime change is reflected in the attributes returned
