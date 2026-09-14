@@ -470,20 +470,11 @@ file system sends three entries for an object whose ACL has
 no mask entry. A receiver accepts either representation in
 either array.
 
-The Access Control Entries in each of the "aclent" and
-"dfaclent" arrays appear in ascending order of their "type"
-element value. Some receivers depend on this ordering. The
-manufactured ACL described in {{no-acl-support}} is the one
-exception among the implementations this document surveys.
-
-<cref anchor="open-fabricated-acl" source="editor">
-The Solaris entry order and class permission are described
-in <xref target="no-acl-support"/> as behavior, not
-identified as defects. If the working group reads either as
-a bug to report rather than a variation to document, this
-text and <xref target="no-acl-support"/> should say so. See
-repository issue #2.
-</cref>
+The Access Control Entries in the "aclent" and "dfaclent"
+arrays can appear in any order. A receiver sorts the entries
+in each array by their "type" element value, and then by
+their "id" element value, before interpreting them. It does
+not depend on the order in which the entries arrive.
 
 When a client presents a SETACL operation that a server
 finds is invalid or it cannot process, the server responds
@@ -811,13 +802,9 @@ a manufactured minimal ACL that reflects the current mode
 bits of the object. Both surveyed servers manufacture four
 Access Control Entries in the "aclent" array and leave the
 "dfaclent" array empty; neither manufactures a default ACL.
-The Solaris server departs from the rules given in
-{{acls-in-operation}} on this path. It sets the
-NA_CLASS_OBJ entry's "perm" element to the constant value 7
-rather than deriving it from the owning group's permission
-bits, and it emits the entries in the order NA_USER_OBJ,
-NA_GROUP_OBJ, NA_OTHER_OBJ, NA_CLASS_OBJ, which is not
-ascending order of "type" value.
+The "perm" element of a manufactured NA_CLASS_OBJ entry does
+not necessarily match the permission bits of the object's
+owning group.
 
 * The server responds to a SETACL version 3 procedure by
 returning ACL3ERR_NOTSUPP.
