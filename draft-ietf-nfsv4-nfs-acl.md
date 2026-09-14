@@ -458,8 +458,10 @@ three or four Access Control Entries.
   Such a sender sends three entries for an object whose ACL
   has no mask entry, and four for a manufactured ACL
   ({{no-acl-support}}), which always occupies four entries
-  in the "aclent" array and none in the "dfaclent" array. A
-  receiver accepts either representation in either array.
+  in the "aclent" array and none in the "dfaclent" array and
+  whose NA_CLASS_OBJ entry is not always formed as described
+  above. A receiver accepts either representation in either
+  array.
 
 * A sender can expand a three-entry list to four. Such a
   sender adds an NA_CLASS_OBJ entry to the NA_USER_OBJ,
@@ -798,10 +800,14 @@ For file objects that do not implement ACL support:
 a manufactured minimal ACL that reflects the current mode
 bits of the object. The manufactured ACL has four Access
 Control Entries in the "aclent" array and none in the
-"dfaclent" array.
-The "perm" element of a manufactured NA_CLASS_OBJ entry does
-not necessarily match the permission bits of the object's
-owning group.
+"dfaclent" array; the server does not manufacture a default
+ACL. The "perm" element of the manufactured NA_CLASS_OBJ
+entry either reflects the permission bits of the object's
+owning group, as {{acls-in-operation}} describes for an
+expanded list, or is 7 (NA_READ, NA_WRITE, and NA_EXEC)
+regardless of those bits. A receiver therefore cannot take a
+manufactured ACL whose NA_CLASS_OBJ and NA_GROUP_OBJ "perm"
+elements differ as evidence of an extended ACL.
 
 * The server responds to a SETACL version 3 procedure by
 returning ACL3ERR_NOTSUPP.
@@ -1058,7 +1064,7 @@ When GETACL2args.fh represents a file object that does not currently
 have an ACL associated with it or does not implement support
 for ACLs, the server responds by returning a manufactured
 minimal NFS ACL that reflects the current owner, group, and
-mode bits of the object (see {{acls-in-operation}}).
+mode bits of the object (see {{no-acl-support}}).
 
 A default ACL applies only to a directory object. When
 GETACL2args.fh represents an object that is not a directory,
@@ -1785,7 +1791,7 @@ not currently have an ACL associated with it or does not
 implement support for ACLs, the server responds by
 returning a manufactured minimal NFS ACL that reflects
 the current owner, group, and mode bits of the object
-(see {{acls-in-operation}}).
+(see {{no-acl-support}}).
 
 A default ACL applies only to a directory object. When
 GETACL3args.fh represents an object that is not a directory,
