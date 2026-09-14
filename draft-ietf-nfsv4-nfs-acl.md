@@ -719,6 +719,13 @@ arrays the reply carries. A client decodes a GETACL reply
 according to the reply's "mask" and treats a reply whose "mask"
 lacks a bit the request set as an error.
 
+A sender sets no bit in a "mask" element other than the four
+defined here. A server that receives a request with an undefined
+bit set either responds with ACL2ERR_INVAL or ACL3ERR_INVAL or
+ignores the bit and processes the defined ones. Because a GETACL
+reply's "mask" echoes the request, the reply can carry the
+undefined bit.
+
 #### The "mask" Element in a SETACL Request {#setacl-mask}
 
 In a GETACL request the "mask" element selects which fields
@@ -1312,6 +1319,10 @@ ACCESS2_DELETE
 
 ACCESS2_EXECUTE
 : Execute file (no meaning for a directory).
+
+A server grants no permission that this protocol does not
+define. A bit set in ACCESS2args.access that is not listed
+above is clear in ACCESS2resok.access.
 
 If the ACCESS procedure is successful, the server
 sets the ACCESS2res.status field to ACL2_OK. It
