@@ -1138,7 +1138,10 @@ described in {{RFC1094}}.
 
 To remove extended access control from a file object, a client
 uses SETACL to replace the object's ACL with a minimal NFS ACL
-(see {{acls-in-operation}}).
+(see {{acls-in-operation}}). To remove a directory's default
+ACL, a client sends a SETACL with both the NA_ACL and NA_DFACL
+bits set, an empty "dfaclent" array, and the directory's
+current access ACL in "aclent" (see {{setacl-mask}}).
 
 If the SETACL procedure is successful, the server sets the
 SETACL2res.status field to ACL2_OK and fills in the
@@ -1878,7 +1881,10 @@ the MOUNT service, as described in {{RFC1813}}.
 
 To remove extended access control from a file object, a client
 uses SETACL to replace the object's ACL with a minimal NFS ACL
-(see {{acls-in-operation}}).
+(see {{acls-in-operation}}). To remove a directory's default
+ACL, a client sends a SETACL with both the NA_ACL and NA_DFACL
+bits set, an empty "dfaclent" array, and the directory's
+current access ACL in "aclent" (see {{setacl-mask}}).
 
 If the SETACL procedure is successful, the server sets
 the SETACL3res.status field to ACL3_OK and fills in the
