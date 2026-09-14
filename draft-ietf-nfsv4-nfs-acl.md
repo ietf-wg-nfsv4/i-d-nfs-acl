@@ -670,7 +670,7 @@ const NA_WRITE = 0x2;           /* write permission */
 const NA_EXEC = 0x1;            /* exec permission */
 ~~~
 
-### secattr
+### secattr {#secattr}
 
 The secattr structure represents, on the wire, the full Access Control
 List for one file system object. This list contains an array of
@@ -700,6 +700,14 @@ const NA_DFACLCNT = 0x8;    /* number of entries in the dfaclent list */
 
 These bit field values are also used in the "mask" element of the
 GETACL2args and GETACL3args structures.
+
+In a GETACL reply, the "mask" element of the returned secattr
+structure carries the same value as the "mask" element of the
+request. Because the server fills in fields as the request's
+"mask" selects them, the reply's "mask" also identifies which
+arrays the reply carries. A client decodes a GETACL reply
+according to the reply's "mask" and treats a reply whose "mask"
+lacks a bit the request set as an error.
 
 #### The "mask" Element in a SETACL Request {#setacl-mask}
 
@@ -1047,6 +1055,12 @@ the number of ACEs that are in the object's access ACL.
 the object's default ACL.
 * if the NA_DFACLCNT bit is set, the server fills in
 the number of ACEs that are in the object's default ACL.
+
+The server fills in a count whenever either bit for that
+array is set, and fills in the array itself only when the
+array's own bit is set. An array the server does not fill in
+is empty on the wire. The reply's "mask" element carries the
+request's value (see {{secattr}}).
 
 If the GETACL procedure is successful, the server sets the
 GETACL2res.status field to ACL2_OK. It fills in the
@@ -1773,6 +1787,12 @@ the number of ACEs that are in the object's access ACL.
 the object's default ACL.
 * if the NA_DFACLCNT bit is set, the server fills in
 the number of ACEs that are in the object's default ACL.
+
+The server fills in a count whenever either bit for that
+array is set, and fills in the array itself only when the
+array's own bit is set. An array the server does not fill in
+is empty on the wire. The reply's "mask" element carries the
+request's value (see {{secattr}}).
 
 If the GETACL procedure is successful, the server sets the
 GETACL3res.status field to ACL3_OK. It fills in the
