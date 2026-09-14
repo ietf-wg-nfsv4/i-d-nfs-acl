@@ -799,9 +799,9 @@ For file objects that do not implement ACL support:
 
 * The server responds to a GETACL procedure by returning
 a manufactured minimal ACL that reflects the current mode
-bits of the object. Both surveyed servers manufacture four
-Access Control Entries in the "aclent" array and leave the
-"dfaclent" array empty; neither manufactures a default ACL.
+bits of the object. The manufactured ACL has four Access
+Control Entries in the "aclent" array and none in the
+"dfaclent" array.
 The "perm" element of a manufactured NA_CLASS_OBJ entry does
 not necessarily match the permission bits of the object's
 owning group.
