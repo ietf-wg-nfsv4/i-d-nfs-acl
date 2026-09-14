@@ -2769,17 +2769,10 @@ modifies the data that governs every other access to the
 object. {{rpc-authentication}} reports that implementations
 permit any authentication flavor on procedures other than
 NULL. That records what implementations accept; it does not
-recommend AUTH_SYS for SETACL.
+recommend AUTH_SYS for SETACL. {{protecting-an-exchange}}
+states what a deployment should do instead.
 
-<cref anchor="open-authsys-setacl" source="editor">
-This paragraph stops short of a recommendation. The
-alternative is to state that a server should refuse SETACL
-under AUTH_SYS, which no surveyed implementation does. Does
-the working group want a recommendation here? See repository
-issue #3.
-</cref>
-
-## Protecting an Exchange
+## Protecting an Exchange {#protecting-an-exchange}
 
 Two mechanisms available to an NFS version 2 or version 3
 deployment apply unchanged to NFS_ACL, which shares the
@@ -2802,6 +2795,15 @@ confidentiality and integrity for everything on the
 connection and can authenticate the peer host. It does not
 authenticate the RPC user, so a server relying on it alone
 still takes on trust the uid and gid each request carries.
+
+A deployment that exposes NFS_ACL beyond a physically
+protected network should protect the exchange with a
+mechanism that detects alteration of each call and reply and
+that authenticates the source of each request, so that
+neither the uid and gid a request carries nor the ACL entries
+in its arguments and results can be altered by a
+man-in-the-middle, and so that a forged credential is
+detected.
 
 ## Residual Risk
 
