@@ -737,20 +737,23 @@ holds both an access ACL and a default ACL, it preserves the
 unselected list on a Linux server and drops that list's
 entries on a Solaris server exporting UFS.
 
-A client avoids the divergence by setting both bits and
-sending both lists on every SETACL, reading back the list it
-does not intend to change so that it can send that list
-unaltered. The Linux NFS client does this: it sets NA_ACL on
-every SETACL, adds NA_DFACL for a directory, and fetches the
-sibling list before sending.
+A client cannot tell from the SETACL reply which way the
+server behaved. A client avoids the divergence by setting
+both bits and sending both lists on every SETACL, reading
+back the list it does not intend to change so that it can
+send that list unaltered. A client that caches ACLs discards
+its cached copy after a SETACL rather than caching what it
+sent, so that its next GETACL fetches what the server
+actually stored.
 
-<cref anchor="open-setacl-mask" source="editor">
-This section records the divergence rather than recommending
-one behavior. A client that follows the last paragraph is
-safe against either server, but a server implementer is left
-without an answer. Does the working group want to choose
-one? See repository issue #1.
-</cref>
+A client that instead sends the "mask" element as the local
+application supplied it, without reading back the other
+list, can send a SETACL that carries one bit without the
+other. Such a request relies on the server storing exactly
+what it receives. A server that treats the element as
+selective leaves the unsent list as it found it, so the
+object ends up with a different ACL than the application
+supplied.
 
 ### Interoperability Considerations
 
