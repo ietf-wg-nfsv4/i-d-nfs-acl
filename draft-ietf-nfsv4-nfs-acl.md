@@ -493,6 +493,8 @@ of NFS_ACL that is in use. ACLs that are not valid include:
   exactly one such value)
 * The presented ACL contains an ACE whose type or perm
   field has a bit set that is not defined by this protocol
+* The count for a non-empty "aclent" or "dfaclent" array
+  differs from the number of entries in that array
 
 The NA_ACL_DEFAULT bit is a flag that a sender combines with
 one of the base type values (for example, NA_ACL_DEFAULT |
@@ -687,6 +689,13 @@ struct secattr {
     aclent dfaclent<NFS_ACL_MAX_ENTRIES>;
 };
 ~~~
+
+The "aclcnt" and "dfaclcnt" elements carry the number of
+Access Control Entries in the object's access ACL and default
+ACL. A count is meaningful whether or not its array is
+present: a GETACL reply carries a count for an array whose
+count bit alone is set, and carries that array empty (see
+{{getacl2}} and {{getacl3}}).
 
 The "mask" element of the secattr structure is a bit mask. The
 bit field values in this mask are defined as follows:
