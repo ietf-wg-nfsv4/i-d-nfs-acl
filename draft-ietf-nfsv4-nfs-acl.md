@@ -486,7 +486,6 @@ of NFS_ACL that is in use. ACLs that are not valid include:
   NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ
 * The presented ACL is a default ACL but the target object
   is not a directory
-* The presented ACL contains too many ACEs
 * The presented ACL contains an ACE whose "type" field
   sets more than one of the base type values NA_USER_OBJ,
   NA_USER, NA_GROUP_OBJ, NA_GROUP, NA_CLASS_OBJ, and
@@ -496,6 +495,12 @@ of NFS_ACL that is in use. ACLs that are not valid include:
   field has a bit set that is not defined by this protocol
 * The count for a non-empty "aclent" or "dfaclent" array
   differs from the number of entries in that array
+
+An ACL that has no more than NFS_ACL_MAX_ENTRIES entries in
+each array can still exceed what the exported file system
+stores in one ACL. A server reports that with ACL2ERR_NOSPC or
+ACL3ERR_NOSPC, or with ACL2ERR_INVAL or ACL3ERR_INVAL when the
+file system rejects the list as invalid.
 
 The NA_ACL_DEFAULT bit is a flag that a sender combines with
 one of the base type values (for example, NA_ACL_DEFAULT |
@@ -614,13 +619,14 @@ transport protocols.
 For TCP and UDP, it uses port 2049, and for RDMA, it uses 20049.
 In both cases, this is the same as the base NFS protocol.
 
-## Sizes
+## Sizes {#sizes}
 
 ~~~ xdr
 NFS_ACL_MAX_ENTRIES 1024
 ~~~
 
-The maximum number of Access Control Entries allowed in one Access Control List array.
+The maximum number of Access Control Entries allowed in one
+Access Control List array.
 
 ## Basic Data Types
 
