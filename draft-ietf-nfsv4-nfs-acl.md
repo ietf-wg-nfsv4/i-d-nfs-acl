@@ -443,10 +443,11 @@ Access Control Entries in an ACL's "dfaclent" comprise
 an object's default ACL. The default ACL does not affect
 access to the object on which it is set.
 
-Each NFS ACL must have one ACE for each of
-NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ.
-An NFS ACL that consists only of these
-three ACEs is referred to as a minimal NFS ACL.
+An access ACL, and a default ACL that has any ACEs, must have
+one ACE for each of NA_USER_OBJ, NA_GROUP_OBJ, and
+NA_OTHER_OBJ. An NFS ACL that consists only of these
+three ACEs is referred to as a minimal NFS ACL. A default ACL
+with no ACEs means the directory has no default ACL.
 
 An NFS ACL may have zero or more NA_USER and/or NA_GROUP
 ACEs.
