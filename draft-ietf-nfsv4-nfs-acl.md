@@ -2717,7 +2717,7 @@ The following definitions, together with the common definitions in
 This section records the status of known implementations of the
 protocol defined by this specification at the time of posting of this
 Internet-Draft, and is based on a proposal described in
-{{!RFC7942}}. The description of implementations in this section is
+{{?RFC7942}}. The description of implementations in this section is
 intended to assist the IETF in its decision processes in progressing
 drafts to RFCs.
 
