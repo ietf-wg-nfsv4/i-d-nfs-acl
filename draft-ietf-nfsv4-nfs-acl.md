@@ -764,13 +764,13 @@ the element as selective and removes that list's entries
 on a server that stores what it receives.
 
 A client cannot tell from the SETACL reply which way the
-server behaved. A client avoids the divergence by setting
-both bits and sending both lists on every SETACL, reading
-back the list it does not intend to change so that it can
-send that list unaltered. A client that caches ACLs discards
-its cached copy after a SETACL rather than caching what it
-sent, so that its next GETACL fetches what the server
-actually stored.
+server behaved. A SETACL that sets both bits and carries both
+lists has the same effect on either server, so a client that
+reads back the list it does not intend to change and sends
+it unaltered is unaffected by the divergence. A client that
+discards its cached copy after a SETACL rather than caching
+what it sent is likewise unaffected by any difference
+between what it sent and what the server stored.
 
 A client that instead sends the "mask" element as the local
 application supplied it, without reading back the other
