@@ -597,7 +597,9 @@ service.  They are given in decimal.
 100227
 : The RPC program number for the NFS_ACL protocol
 
-Only versions 2 and 3 of this RPC program are valid.
+This document describes versions 2 and 3 of this RPC program.
+Version 4 was used by a Solaris prototype and is not available
+for reuse (see {{nfs-acl-v4}}).
 
 ## Transport address
 
@@ -2926,7 +2928,7 @@ However, there are a few changes to the protocol as it
 was originally described in the OpenSolaris source code
 base.
 
-## Redaction of NFS_ACL Version 4
+## Redaction of NFS_ACL Version 4 {#nfs-acl-v4}
 
 Version 4 of NFS_ACL is described in the original nfs_acl.x source
 file this way:
