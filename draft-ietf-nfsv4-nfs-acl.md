@@ -601,10 +601,12 @@ Only versions 2 and 3 of this RPC program are valid.
 
 ## Transport address
 
-The NFS_ACL protocol can operate over the TCP, UDP, and RDMA
-transport protocols.
-For TCP and UDP, it uses port 2049, and for RDMA, it uses 20049.
-In both cases, this is the same as the base NFS protocol.
+The NFS_ACL protocol can operate over the TCP and UDP transport
+protocols, on port 2049, and over RPC-over-RDMA version 1
+{{?RFC8166}}, on port 20049. In each case this is the port of
+the NFS service that NFS_ACL accompanies. {{Section 5.2 of
+?RFC8267}} gives the upper-layer binding for NFS_ACL on
+RPC-over-RDMA.
 
 ## Sizes {#sizes}
 
@@ -2330,9 +2332,10 @@ text need be preserved.
 ///                                 /* dfaclent list */
 ///
 /// /*
-///  * Share the port with the NFS service.
+///  * Share the ports with the NFS service.
 ///  */
 /// const NFS_ACL_PORT = 2049;
+/// const NFS_ACL_RDMA_PORT = 20049;
 ~~~
 
 ## NFS_ACL Version 2 {#nfs-acl-v2-xdr}
