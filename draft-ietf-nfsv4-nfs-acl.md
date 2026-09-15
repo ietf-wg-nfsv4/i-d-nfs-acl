@@ -2783,7 +2783,9 @@ alter file content directly through NFS gains nothing by
 attacking the ACL that governs it, and {{RFC2623}} covers
 those protocols. Attacks on the local file system that
 stores an ACL, and on the mechanism by which a site maps
-users to uid and gid values, are out of scope as well.
+users to uid and gid values, are out of scope as well: both
+are shared with the NFS service that NFS_ACL accompanies, and
+neither is reachable through the NFS_ACL protocol itself.
 
 ## Attacks on an Unprotected Exchange {#unprotected-exchange}
 
