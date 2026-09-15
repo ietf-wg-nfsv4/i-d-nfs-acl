@@ -585,6 +585,9 @@ specifies the content and behavior of ACLs.
 
 The NFS_ACL service uses AUTH_NONE in the NULL procedure.
 All RPC authentication flavors may be used for other procedures.
+That records what implementations accept, not what a deployment
+should use; see {{unprotected-exchange}} and
+{{protecting-an-exchange}}.
 
 ## Constants
 
