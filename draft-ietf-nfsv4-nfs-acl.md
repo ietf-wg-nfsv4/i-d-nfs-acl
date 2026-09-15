@@ -560,37 +560,17 @@ present might have been modified.
 
 #### ACL Inheritance
 
-A client uses one of the NFS CREATE, MKDIR, or MKNOD procedures
-to request instantiation of a new file object. When the parent
-directory carries a default ACL (that is, a non-empty "dfaclent"
-array), the server forms the new object's access ACL from that
-default ACL, copying each default entry into the new object's
-access ACL with the NA_ACL_DEFAULT flag cleared so that the
-entry governs access to the new object.
-
-The default ACL also constrains the new object's mode bits. The
-server derives the owner permission bits from the default
-NA_USER_OBJ entry, the other permission bits from the default
-NA_OTHER_OBJ entry, and the group permission bits from the
-default NA_CLASS_OBJ (mask) entry when one is present or else
-from the default NA_GROUP_OBJ entry. The server first reduces
-each of these three permission sets to its intersection with the
-corresponding permission the client requested in the creation
-operation. The reduced permissions become both the new object's
-mode bits and the permissions of the corresponding entries in
-its access ACL. Through this intersection a default ACL takes
-the place of a umask in limiting the permissions of a newly
-created object; see {{Gruenbacher}} for the relationship between
-default ACLs and the umask.
-
-When the newly created object is itself a directory, the server
-also copies the parent's default ACL into the new directory's
-own default ACL, so that the default ACL propagates to
-subsequent descendants.
-
-When the parent directory has no default ACL, the server assigns
-no ACL to the new object, and the object's mode bits are those
-the client requested in the creation operation.
+A directory's default ACL takes effect when a client uses one
+of the NFS CREATE, MKDIR, or MKNOD procedures to create an
+object in that directory. The exported file system derives the
+new object's access ACL and mode bits from the parent's default
+ACL and the mode the client requested, and gives a new
+directory the parent's default ACL as its own. That derivation
+is a property of the exported file system rather than of this
+protocol. {{Gruenbacher}} describes the POSIX 1003.1e rules for
+that derivation, including how a default ACL takes the place of
+the umask. A client observes the result by
+retrieving the new object's ACL with GETACL.
 
 #### Historical References
 
