@@ -472,10 +472,8 @@ three or four Access Control Entries.
   "dfaclent" array.
 
 The Access Control Entries in the "aclent" and "dfaclent"
-arrays can appear in any order. A receiver sorts the entries
-in each array by their "type" element value, and then by
-their "id" element value, before interpreting them. It does
-not depend on the order in which the entries arrive.
+arrays can appear in any order. A receiver does not depend on
+the order in which the entries arrive.
 
 When a client presents a SETACL operation that a server
 finds is invalid or it cannot process, the server responds
