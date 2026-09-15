@@ -6,7 +6,7 @@ category: info
 docname: draft-ietf-nfsv4-nfs-acl-latest
 pi: [sortrefs, symrefs, docmapping]
 submissiontype: IETF
-ipr: trust200902
+ipr: pre5378Trust200902
 stand_alone: yes
 v: 3
 area: "Web and Internet Transport"
