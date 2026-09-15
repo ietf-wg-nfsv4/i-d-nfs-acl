@@ -798,15 +798,15 @@ interoperability scenarios.
 
 #### Client Implements NFS_ACL, Server Does Not
 
-Typically an NFS server that implements the NFS_ACL program will
-advertise the presence of NFS_ACL via an rpcbind registration.
-An NFS client that implements NFS_ACL should perform an rpcbind
-query before attempting any NFS_ACL procedure {{?RFC1833}}.
+An NFS server that implements the NFS_ACL program can
+advertise it via an rpcbind registration {{?RFC1833}}.
 
-If the client sends any NFS_ACL procedure without sending an
-rpcbind query first, and the server does not implement the
-NFS_ACL program, the server responds with an RPC access_stat
-of PROG_UNAVAIL.
+A client can query rpcbind before its first NFS_ACL procedure,
+or it can send a procedure and treat the outcome as a probe
+for service availability. When a client sends an NFS_ACL
+procedure to a server that does not implement the program,
+the server responds with an RPC accept_stat of PROG_UNAVAIL
+({{Section 9 of RFC5531}}).
 
 #### Server Implements NFS_ACL, Client Does Not
 
