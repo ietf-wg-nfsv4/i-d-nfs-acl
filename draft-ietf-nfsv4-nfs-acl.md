@@ -705,28 +705,30 @@ GETACL2args and GETACL3args structures.
 
 In a GETACL request the "mask" element selects which fields
 the server fills in, as described in {{getacl2}} and
-{{getacl3}}. Implementations do not agree on what the
-element means in a SETACL request.
+{{getacl3}}. In a SETACL request the element carries the
+same bit values, and a server interprets it in one of two
+ways.
 
-The Linux NFS server treats it as selective there as well.
-It replaces the object's access ACL only when NA_ACL is set,
+A server can treat the element as selective. Such a server
+replaces the object's access ACL only when NA_ACL is set
 and the object's default ACL only when NA_DFACL is set,
-leaving an unselected list as it found it.
+and leaves an unselected list as it found it.
 
-The Solaris NFS_ACL server does not consult the element on
-SETACL, and the outcome depends on the file system it
-exports. When that file system is UFS, the server stores
-exactly the entries the request carries, so the entries of a
-list the sender leaves empty are dropped from the object
-rather than preserved. When it is ZFS, the server returns
-ACL2ERR_NOTSUPP or ACL3ERR_NOTSUPP as described in
-{{no-acl-support}}.
+A server can instead disregard the element and store the
+entries the request carries. Such a server replaces both of
+the object's lists on every SETACL, so the entries of a
+list the sender leaves empty are removed from the object
+rather than preserved. When the exported file system does
+not store the form of ACL that NFS_ACL carries, such a
+server responds with ACL2ERR_NOTSUPP or ACL3ERR_NOTSUPP as
+described in {{no-acl-support}}.
 
-A SETACL that sets one of the two bits and clears the other
-therefore has no single meaning. Sent to a directory that
-holds both an access ACL and a default ACL, it preserves the
-unselected list on a Linux server and drops that list's
-entries on a Solaris server exporting UFS.
+A SETACL that sets one of NA_ACL and NA_DFACL and clears
+the other therefore has no single meaning. Sent to a
+directory that holds both an access ACL and a default ACL,
+it preserves the unselected list on a server that treats
+the element as selective and removes that list's entries
+on a server that stores what it receives.
 
 A client cannot tell from the SETACL reply which way the
 server behaved. A client avoids the divergence by setting
