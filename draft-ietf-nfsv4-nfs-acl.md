@@ -484,6 +484,8 @@ of NFS_ACL that is in use. ACLs that are not valid include:
 
 * The presented ACL does not contain one ACE for each of
   NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ
+* The presented ACL contains an NA_GROUP ACE but no
+  NA_CLASS_OBJ ACE
 * The presented ACL is a default ACL but the target object
   is not a directory
 * The presented ACL contains an ACE whose "type" field
@@ -495,6 +497,11 @@ of NFS_ACL that is in use. ACLs that are not valid include:
   field has a bit set that is not defined by this protocol
 * The count for a non-empty "aclent" or "dfaclent" array
   differs from the number of entries in that array
+
+Whether an ACL that contains an NA_USER ACE but no
+NA_CLASS_OBJ ACE is valid depends on the exported file
+system. A server responds with ACL2ERR_INVAL or ACL3ERR_INVAL
+when the exported file system rejects such an ACL.
 
 An ACL that has no more than NFS_ACL_MAX_ENTRIES entries in
 each array can still exceed what the exported file system
