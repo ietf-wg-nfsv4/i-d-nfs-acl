@@ -470,6 +470,15 @@ three or four Access Control Entries.
   object's owning group, in both the "aclent" and the
   "dfaclent" array.
 
+The two representations are not interchangeable in every
+case. Implementations follow different drafts of POSIX
+1003.1e, and the drafts differ in their treatment of the
+mask entry in a four-entry ACL; {{Gruenbacher}} describes
+the difference. A receiver that follows draft 17 removes the
+NA_CLASS_OBJ entry from a four-entry list when its "perm"
+element equals that of the NA_GROUP_OBJ entry, restoring the
+three-entry form, and keeps the entry when the two differ.
+
 The Access Control Entries in the "aclent" and "dfaclent"
 arrays can appear in any order. A receiver does not depend on
 the order in which the entries arrive.
@@ -2756,13 +2765,9 @@ subsequent modifications can be found in the Linux kernel
 source code repository {{Linux}}.
 
 {{Gruenbacher}} notes several minor differences between the
-Linux and Solaris implementations of ACLs, and remarks that:
-
-> Solaris ACLs are based on an earlier draft of POSIX 1003.1e,
-> so its handling of the mask ACL entry is slightly different
-> than in draft 17 for ACLs with only four ACL entries. This
-> is a corner case that occurs only rarely, so the semantic
-> differences may not be noticeable.
+Linux and Solaris implementations of ACLs. The one visible on
+the wire, the treatment of the mask entry in a four-entry ACL,
+is described in {{acls-in-operation}}.
 
 The Linux NFS_ACL implementation already builds the version 2 and
 version 3 protocols from two separate source files, presently
