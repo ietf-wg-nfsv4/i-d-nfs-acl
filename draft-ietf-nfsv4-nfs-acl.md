@@ -452,23 +452,21 @@ An NFS ACL may have zero or more NA_USER and/or NA_GROUP
 ACEs.
 
 On the wire, a minimal NFS ACL is represented as either
-three Access Control Entries or four. A sender that uses
-four adds an NA_CLASS_OBJ entry to the NA_USER_OBJ,
-NA_GROUP_OBJ, and NA_OTHER_OBJ entries, and derives that
-entry's "perm" element from the permission bits of the
-object's owning group. The Linux NFS server expands a
-three-entry list this way in both the "aclent" and the
-"dfaclent" array.
+three or four Access Control Entries.
 
-The Solaris NFS_ACL server performs no such expansion, and
-what it sends depends on the file system it exports. A
-Solaris server exporting a ZFS file system sends the
-manufactured ACL described in {{no-acl-support}}, which
-always occupies four entries in the "aclent" array and none
-in the "dfaclent" array. A Solaris server exporting a UFS
-file system sends three entries for an object whose ACL has
-no mask entry. A receiver accepts either representation in
-either array.
+* A sender can send the list as the file system stores it.
+  Such a sender sends three entries for an object whose ACL
+  has no mask entry, and four for a manufactured ACL
+  ({{no-acl-support}}), which always occupies four entries
+  in the "aclent" array and none in the "dfaclent" array. A
+  receiver accepts either representation in either array.
+
+* A sender can expand a three-entry list to four. Such a
+  sender adds an NA_CLASS_OBJ entry to the NA_USER_OBJ,
+  NA_GROUP_OBJ, and NA_OTHER_OBJ entries, and derives that
+  entry's "perm" element from the permission bits of the
+  object's owning group, in both the "aclent" and the
+  "dfaclent" array.
 
 The Access Control Entries in the "aclent" and "dfaclent"
 arrays can appear in any order. A receiver sorts the entries
