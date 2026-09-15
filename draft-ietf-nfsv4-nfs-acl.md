@@ -2155,8 +2155,13 @@ processing the duplicate request again.
 A description of an early implementation of a
 duplicate request cache can be found in {{Juszczak}}.
 
-For all versions of the NFS_ACL protocol, the SETACL
-procedure is considered to be non-idempotent.
+A retransmitted SETACL that a server processes after a later
+SETACL on the same object reinstates the older ACL. A duplicate
+request cache narrows that window but does not close it: the
+cache is finite, and an entry can age out before the
+retransmission arrives (see {{unprotected-exchange}}). A client
+therefore cannot depend on whether a server caches SETACL
+replies.
 
 ## Caching Policies
 
@@ -2801,7 +2806,7 @@ those protocols. Attacks on the local file system that
 stores an ACL, and on the mechanism by which a site maps
 users to uid and gid values, are out of scope as well.
 
-## Attacks on an Unprotected Exchange
+## Attacks on an Unprotected Exchange {#unprotected-exchange}
 
 Running NFS_ACL over AUTH_SYS on an unprotected transport
 defends against none of the following.
