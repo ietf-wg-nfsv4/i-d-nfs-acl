@@ -787,13 +787,10 @@ file systems that do not. In this case, NFS clients
 detect the presence of an NFS_ACL service on the NFS
 server.
 
-This is not an unusual case. A Solaris server exporting a
-ZFS file system behaves as this section describes for every
-object it shares: GETACL returns a manufactured ACL, and
-SETACL fails. The behavior described here is therefore the
-ordinary one for a Solaris server on its default file
-system, not a fallback reserved for file systems without
-access control.
+A file system that implements access control lists of a
+different form than NFS_ACL carries behaves as this section
+describes for every object it holds. GETACL returns a
+manufactured ACL, and SETACL fails.
 
 For file objects that do not implement ACL support:
 
