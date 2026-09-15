@@ -1003,6 +1003,9 @@ ACL2ERR_STALE
 
 ## Server Procedures
 
+The ERRORS subsection of each procedure enumerates the status
+values a server returns from that procedure.
+
 ### Procedure 0: NULL - No Operation
 
 #### ARGUMENTS
@@ -1119,6 +1122,8 @@ array and a dfaclcnt of zero rather than reporting an error.
 #### ERRORS
 
 - ACL2ERR_IO
+- ACL2ERR_ACCES
+- ACL2ERR_INVAL
 - ACL2ERR_STALE
 
 ### Procedure 2: SETACL - Set or replace an Access Control List
@@ -1737,6 +1742,9 @@ ACL3ERR_JUKEBOX
 
 ## Server Procedures
 
+The ERRORS subsection of each procedure enumerates the status
+values a server returns from that procedure.
+
 ### Procedure 0: NULL - No Operation
 
 #### ARGUMENTS
@@ -1859,6 +1867,8 @@ array and a dfaclcnt of zero rather than reporting an error.
 #### ERRORS
 
 - ACL3ERR_IO
+- ACL3ERR_ACCES
+- ACL3ERR_INVAL
 - ACL3ERR_STALE
 - ACL3ERR_BADHANDLE
 - ACL3ERR_SERVERFAULT
