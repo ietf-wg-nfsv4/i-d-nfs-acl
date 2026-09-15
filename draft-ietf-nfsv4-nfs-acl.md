@@ -1483,8 +1483,8 @@ In this case, the server returns the RPC-level error PROC_UNAVAIL.
 If the server implementation does implement the GETXATTRDIR procedure
 but the shared file system containing the file object specified by the
 file handle in the GETXATTRDIR2args.fh field does not support named
-attributes, the server returns ACL2ERR_IO in the GETXATTRDIR2res.status
-field.
+attributes, the server returns ACL2ERR_NOTSUPP in the
+GETXATTRDIR2res.status field.
 
 #### ERRORS
 
@@ -1496,6 +1496,7 @@ field.
 - ACL2ERR_NOSPC
 - ACL2ERR_ROFS
 - ACL2ERR_STALE
+- ACL2ERR_NOTSUPP
 
 # NFS_ACL Version 3
 
