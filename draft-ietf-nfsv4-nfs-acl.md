@@ -2213,6 +2213,7 @@ awk '
   END { for (f in part) printf "%s%s", common, part[f] > f }
 '
 ~~~
+{: sourcecode-markers="true"}
 
 That is, if the above script is stored in a file called
 "extract.sh" and this document is in a file called "spec.txt", then
@@ -2220,6 +2221,7 @@ That is, if the above script is stored in a file called
 ~~~ sh
 sh extract.sh < spec.txt
 ~~~
+{: sourcecode-markers="true"}
 
 writes two files into the current directory: nfs_acl2.x, containing
 the common definitions followed by the NFS_ACL version 2 definitions
@@ -2348,6 +2350,7 @@ text need be preserved.
 /// const NFS_ACL_PORT = 2049;
 /// const NFS_ACL_RDMA_PORT = 20049;
 ~~~
+{: sourcecode-markers="true"}
 
 ## NFS_ACL Version 2 {#nfs-acl-v2-xdr}
 
@@ -2532,6 +2535,7 @@ The following definitions, together with the common definitions in
 ///     } = 2;
 /// } = 100227;
 ~~~
+{: sourcecode-markers="true"}
 
 ## NFS_ACL Version 3 {#nfs-acl-v3-xdr}
 
@@ -2702,6 +2706,7 @@ The following definitions, together with the common definitions in
 ///     } = 3;
 /// } = 100227;
 ~~~
+{: sourcecode-markers="true"}
 
 # Implementation Status
 
