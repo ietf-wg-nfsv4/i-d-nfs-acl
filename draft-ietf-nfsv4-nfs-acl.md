@@ -811,12 +811,6 @@ returning ACL3ERR_NOTSUPP.
 * The server responds to a SETACL version 2 procedure by
 returning ACL2ERR_NOTSUPP.
 
-The Linux NFS server deviates from the protocol specified in the
-current document by returning the value 10004 (the NFS version 3
-NFS3ERR_NOTSUPP value) rather than the value 45 that this document
-assigns to ACL2ERR_NOTSUPP, in response to a SETACL version 2
-procedure on a file system that does not support ACLs.
-
 # NFS_ACL Version 2
 
 Version 2 of the NFS_ACL protocol is used in conjunction only with
@@ -908,13 +902,12 @@ ACL2ERR_INVAL with that value, even though the NFS version 2 "stat"
 type has no matching code.
 
 Similarly, the "stat" type does not define a status code that
-reports that a requested operation is not supported. The Solaris
-NFS_ACL version 2 server returns the value 45 (its NFSERR_OPNOTSUPP
-status code) when a client directs an operation at a file object
-whose file system does not support ACLs. The aclstat2 type therefore
-defines ACL2ERR_NOTSUPP with that value. This value matches the one
-that the sole existing NFS_ACL version 2 client (the Solaris
-implementation) decodes to the POSIX EOPNOTSUPP error; the numeric
+reports that a requested operation is not supported. The original
+NFS_ACL version 2 server implementation returns the value 45 (its
+NFSERR_OPNOTSUPP status code) when a client directs an operation at a
+file object whose file system does not support ACLs. The aclstat2
+type therefore defines ACL2ERR_NOTSUPP with that value. A server
+returns ACL2ERR_NOTSUPP in NFS_ACL version 2 results; the numeric
 value 10004 that NFS version 3 assigns to NFS3ERR_NOTSUPP is not used
 in NFS_ACL version 2 results.
 
