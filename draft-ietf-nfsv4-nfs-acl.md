@@ -2881,6 +2881,15 @@ of the uid the request carries. Under AUTH_SYS the client
 supplies that value, so the mapping deters accident rather
 than attack.
 
+The "id" element of an Access Control Entry is a uid or gid in
+the server's numeric space. RPCSEC_GSS maps the caller's
+principal to a local identity (see {{auth-and-authz}}), but no
+authentication flavor translates the identities an ACL names.
+Across an administrative boundary, a client that writes an ACL
+names users and groups by numbers it cannot confirm are the
+server's, and a client that reads one cannot resolve the
+numbers it receives.
+
 An ACL a client has read, and the result of an ACCESS
 procedure, describe the server's decision at the moment it
 was made. The server alone authorizes access (see
