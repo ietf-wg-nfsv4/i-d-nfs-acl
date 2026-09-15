@@ -746,12 +746,14 @@ and the object's default ACL only when NA_DFACL is set,
 and leaves an unselected list as it found it.
 
 A server can instead disregard the element and store the
-entries the request carries. Such a server replaces both of
-the object's lists on every SETACL, so the entries of a
-list the sender leaves empty are removed from the object
-rather than preserved. When the exported file system does
-not store the form of ACL that NFS_ACL carries, such a
-server responds with ACL2ERR_NOTSUPP or ACL3ERR_NOTSUPP as
+entries the request carries. Such a server rejects a
+request whose "mask" is zero with ACL2ERR_INVAL or
+ACL3ERR_INVAL, and otherwise replaces both of the object's
+lists on every SETACL, so the entries of a list the sender
+leaves empty are removed from the object rather than
+preserved. When the exported file system does not store
+the form of ACL that NFS_ACL carries, such a server
+responds with ACL2ERR_NOTSUPP or ACL3ERR_NOTSUPP as
 described in {{no-acl-support}}.
 
 A SETACL that sets one of NA_ACL and NA_DFACL and clears
