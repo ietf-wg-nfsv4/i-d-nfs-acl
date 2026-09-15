@@ -404,11 +404,10 @@ ACL grants it.
 - Server implementations can grant some limited permission
 to update an ACL in order to prevent a situation from
 arising in which there is no valid way to ever modify the ACL.
-- All servers will allow a user the ability to read the
-data of the file when only the execute permission is granted
-(i.e., if the ACL denies the user the NA_READ access and
-allows the user NA_EXEC, the server will allow the user to
-read the data of the file).
+- Server implementations can allow a user to read the data
+of a file when only the execute permission is granted (that
+is, when the ACL denies the user NA_READ but allows NA_EXEC),
+since a server has to read the file to execute it.
 - Some server implementations have the notion of
 owner-override, in which the owner of the object is allowed
 to override accesses that are denied by the ACL. This can be
