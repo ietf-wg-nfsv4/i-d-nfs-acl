@@ -87,8 +87,9 @@ informative:
     title: Linux kernel source code
     target: https://www.kernel.org
   OpenSolaris:
-    title: Archived OpenSolaris source code
-    target:  https://github.com/kofemann/opensolaris
+    title: "Archived OpenSolaris source code: usr/src/head/rpcsvc/nfs_acl.x"
+    target: https://github.com/kofemann/opensolaris/blob/3dfbd886134b95a44386706352b92788c30f9569/usr/src/head/rpcsvc/nfs_acl.x
+    date: 2005-06
 
 --- abstract
 
