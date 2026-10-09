@@ -4,8 +4,8 @@
 
 Network File System Version 4                              C. Lever, Ed.
 Internet-Draft                                               Independent
-Intended status: Informational                         15 September 2026
-Expires: 19 March 2027
+Intended status: Informational                            9 October 2026
+Expires: 12 April 2027
 
 
           The Network File System Access Control List Protocol
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 March 2027.
+   This Internet-Draft will expire on 12 April 2027.
 
 Copyright Notice
 
@@ -3021,8 +3021,9 @@ A.3.  Code Compilation Requirements
 Acknowledgments
 
    The editor is grateful to Bill Baker, Frank Batschulat, Wim
-   Coekaerts, Andreas Gruenbacher, Rick Macklem, Greg Marsden, Martin
-   Thomson, Rob Thurlow, and Jim Wright for their input and support.
+   Coekaerts, Andreas Gruenbacher, Rick Macklem, Greg Marsden, Tom
+   Talpey, Martin Thomson, Rob Thurlow, and Jim Wright for their input
+   and support.
 
    Special thanks to Area Director Gorry Fairhurst, NFSV4 Working Group
    Chair Brian Pawlowski, and NFSV4 Working Group Secretary Thomas
