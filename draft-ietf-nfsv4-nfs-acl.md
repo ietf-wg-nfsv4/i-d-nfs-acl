@@ -2987,6 +2987,7 @@ Wim Coekaerts,
 Andreas Gruenbacher,
 Rick Macklem,
 Greg Marsden,
+Tom Talpey,
 Martin Thomson,
 Rob Thurlow,
 and
