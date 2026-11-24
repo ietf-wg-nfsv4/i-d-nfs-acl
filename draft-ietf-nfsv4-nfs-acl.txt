@@ -4,8 +4,8 @@
 
 Network File System Version 4                              C. Lever, Ed.
 Internet-Draft                                               Independent
-Intended status: Informational                            9 October 2026
-Expires: 12 April 2027
+Intended status: Informational                          24 November 2026
+Expires: 28 May 2027
 
 
           The Network File System Access Control List Protocol
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 April 2027.
+   This Internet-Draft will expire on 28 May 2027.
 
 Copyright Notice
 
@@ -485,11 +485,20 @@ Table of Contents
       default ACL does not affect access to the object on which it is
       set.
 
-   An access ACL, and a default ACL that has any ACEs, must have one ACE
-   for each of NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ.  An NFS ACL
-   that consists only of these three ACEs is referred to as a minimal
-   NFS ACL.  A default ACL with no ACEs means the directory has no
-   default ACL.
+   An access ACL or default ACL that has any ACEs must have one ACE for
+   each of NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ.  An NFS ACL that
+   consists only of these three ACEs is referred to as a minimal NFS
+   ACL.
+
+   A server treats an array with no entries as the absence of that list
+   rather than as an ACL to validate.  When a SETACL request carries an
+   empty "aclent" array, the server removes the object's access ACL, and
+   the permission bits alone then govern access.  When a SETACL request
+   carries an empty "dfaclent" array, the server removes the directory's
+   default ACL.  Which lists a SETACL request replaces also depends on
+   the "mask" element (Section 4.6.2.1).  Some servers respond with
+   ACL2ERR_INVAL or ACL3ERR_INVAL to a SETACL request in which both
+   arrays are empty.
 
    An NFS ACL may have zero or more NA_USER and/or NA_GROUP ACEs.
 
@@ -527,8 +536,8 @@ Table of Contents
    or ACL3ERR_INVAL, depending on the version of NFS_ACL that is in use.
    ACLs that are not valid include:
 
-   *  The presented ACL does not contain one ACE for each of
-      NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ
+   *  The presented ACL has at least one ACE but does not contain one
+      ACE for each of NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ
 
    *  The presented ACL contains an NA_GROUP ACE but no NA_CLASS_OBJ ACE
 
@@ -1179,9 +1188,11 @@ Table of Contents
    support for ACLs, the server responds by setting SETACL2res.status to
    ACL2ERR_NOTSUPP.
 
-   When the new ACL does not contain at least the minimal set of ACEs
-   (as described in Section 3.4.4.2), the server responds by setting
-   SETACL2res.status to ACL2ERR_INVAL.
+   When a list in SETACL2args.acl that has entries does not contain at
+   least the minimal set of ACEs (as described in Section 3.4.4.2), the
+   server responds by setting SETACL2res.status to ACL2ERR_INVAL.  A
+   list with no entries is not subject to this check; Section 3.4.4.2
+   describes how a server treats it.
 
    Servers differ in how they treat the "mask" element of
    SETACL2args.acl.  Section 4.6.2.1 describes the divergence and how a
@@ -1893,9 +1904,11 @@ Table of Contents
    support for ACLs, the server responds by setting SETACL3res.status to
    ACL3ERR_NOTSUPP.
 
-   When SETACL3args.acl does not contain at least the minimal set of
-   ACEs (as described in Section 3.4.4.2), the server responds by
-   setting SETACL3res.status to ACL3ERR_INVAL.
+   When a list in SETACL3args.acl that has entries does not contain at
+   least the minimal set of ACEs (as described in Section 3.4.4.2), the
+   server responds by setting SETACL3res.status to ACL3ERR_INVAL.  A
+   list with no entries is not subject to this check; Section 3.4.4.2
+   describes how a server treats it.
 
    Servers differ in how they treat the "mask" element of
    SETACL3args.acl.  Section 4.6.2.1 describes the divergence and how a

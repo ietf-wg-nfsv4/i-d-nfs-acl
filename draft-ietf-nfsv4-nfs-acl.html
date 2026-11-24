@@ -12,24 +12,24 @@ NFS_ACL is a legacy member of the Network File System family
 of protocols that NFS clients use to view and update Access
 Control Lists stored on an NFS version 2 or version 3 server. 
     " name="description">
-<meta content="xml2rfc 3.34.1" name="generator">
+<meta content="xml2rfc 3.35.0" name="generator">
 <meta content="NFS" name="keyword">
 <meta content="ACL" name="keyword">
 <meta content="draft-ietf-nfsv4-nfs-acl-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.1
-    Python 3.14.8
-    ConfigArgParse 1.8.0
+  xml2rfc 3.35.0
+    Python 3.14.10
+    ConfigArgParse 1.10.1
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.12.2
+    platformdirs 4.14.7
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.9.1
+    wcwidth 0.9.4
 -->
 <link href="draft-ietf-nfsv4-nfs-acl.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1030,7 +1030,7 @@ svg {
   & :is([stroke="white"], [stroke^="#fff"]) {
     stroke: var(--background-color);
   }
-  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+  & :is([fill="black"], [fill^="#000"], :not([fill], [fill] *)) {
     fill: var(--text-color);
   }
   & :is([fill="white"], [fill^="#fff"]) {
@@ -1045,11 +1045,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">NFS ACL Protocol</td>
-<td class="right">October 2026</td>
+<td class="right">November 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Lever</td>
-<td class="center">Expires 12 April 2027</td>
+<td class="center">Expires 28 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg {
 <dd class="internet-draft">draft-ietf-nfsv4-nfs-acl-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-09" class="published">9 October 2026</time>
+<time datetime="2026-11-24" class="published">24 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-04-12">12 April 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-28">28 May 2027</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1121,7 +1121,7 @@ Control Lists stored on an NFS version 2 or version 3 server.<a href="#section-a
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1858,89 +1858,99 @@ access to the object on which it is set.<a href="#section-3.4.4.2-2.4.1" class="
 </dd>
             <dd class="break"></dd>
 </dl>
-<p id="section-3.4.4.2-3">An access ACL, and a default ACL that has any ACEs, must have
-one ACE for each of NA_USER_OBJ, NA_GROUP_OBJ, and
-NA_OTHER_OBJ. An NFS ACL that consists only of these
-three ACEs is referred to as a minimal NFS ACL. A default ACL
-with no ACEs means the directory has no default ACL.<a href="#section-3.4.4.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.4.4.2-4">An NFS ACL may have zero or more NA_USER and/or NA_GROUP
-ACEs.<a href="#section-3.4.4.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.4.4.2-5">On the wire, a minimal NFS ACL is represented as either
-three or four Access Control Entries.<a href="#section-3.4.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-3">An access ACL or default ACL that has any ACEs must have one
+ACE for each of NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ.
+An NFS ACL that consists only of these three ACEs is referred
+to as a minimal NFS ACL.<a href="#section-3.4.4.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-4">A server treats an array with no entries as the absence of
+that list rather than as an ACL to validate. When a SETACL
+request carries an empty "aclent" array, the server removes
+the object's access ACL, and the permission bits alone then
+govern access. When a SETACL request carries an empty
+"dfaclent" array, the server removes the directory's default
+ACL. Which lists a SETACL request replaces also depends on
+the "mask" element (<a href="#setacl-mask" class="auto internal xref">Section 4.6.2.1</a>). Some servers respond
+with ACL2ERR_INVAL or ACL3ERR_INVAL to a SETACL request in
+which both arrays are empty.<a href="#section-3.4.4.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-5">An NFS ACL may have zero or more NA_USER and/or NA_GROUP
+ACEs.<a href="#section-3.4.4.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-6">On the wire, a minimal NFS ACL is represented as either
+three or four Access Control Entries.<a href="#section-3.4.4.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.4.4.2-6.1">
-                <p id="section-3.4.4.2-6.1.1">A sender can send the list as the file system stores it.
+<li class="normal" id="section-3.4.4.2-7.1">
+                <p id="section-3.4.4.2-7.1.1">A sender can send the list as the file system stores it.
 Such a sender sends three entries for an object whose ACL
 has no mask entry, and four for a manufactured ACL
 (<a href="#no-acl-support" class="auto internal xref">Section 4.6.3.3</a>), which always occupies four entries
 in the "aclent" array and none in the "dfaclent" array and
 whose NA_CLASS_OBJ entry is not always formed as described
 above. A receiver accepts either representation in either
-array.<a href="#section-3.4.4.2-6.1.1" class="pilcrow">¶</a></p>
+array.<a href="#section-3.4.4.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.4.4.2-6.2">
-                <p id="section-3.4.4.2-6.2.1">A sender can expand a three-entry list to four. Such a
+              <li class="normal" id="section-3.4.4.2-7.2">
+                <p id="section-3.4.4.2-7.2.1">A sender can expand a three-entry list to four. Such a
 sender adds an NA_CLASS_OBJ entry to the NA_USER_OBJ,
 NA_GROUP_OBJ, and NA_OTHER_OBJ entries, and derives that
 entry's "perm" element from the permission bits of the
 object's owning group, in both the "aclent" and the
-"dfaclent" array.<a href="#section-3.4.4.2-6.2.1" class="pilcrow">¶</a></p>
+"dfaclent" array.<a href="#section-3.4.4.2-7.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-3.4.4.2-7">The two representations are not interchangeable in every
+<p id="section-3.4.4.2-8">The two representations are not interchangeable in every
 case. Implementations follow different drafts of POSIX
 1003.1e, and the drafts differ in their treatment of the
 mask entry in a four-entry ACL; <span>[<a href="#Gruenbacher" class="cite xref">Gruenbacher</a>]</span> describes
 the difference. A receiver that follows draft 17 removes the
 NA_CLASS_OBJ entry from a four-entry list when its "perm"
 element equals that of the NA_GROUP_OBJ entry, restoring the
-three-entry form, and keeps the entry when the two differ.<a href="#section-3.4.4.2-7" class="pilcrow">¶</a></p>
-<p id="section-3.4.4.2-8">The Access Control Entries in the "aclent" and "dfaclent"
+three-entry form, and keeps the entry when the two differ.<a href="#section-3.4.4.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-9">The Access Control Entries in the "aclent" and "dfaclent"
 arrays can appear in any order. A receiver does not depend on
-the order in which the entries arrive.<a href="#section-3.4.4.2-8" class="pilcrow">¶</a></p>
-<p id="section-3.4.4.2-9">When a client presents a SETACL operation that a server
+the order in which the entries arrive.<a href="#section-3.4.4.2-9" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-10">When a client presents a SETACL operation that a server
 finds is invalid or it cannot process, the server responds
 with ACL2ERR_INVAL or ACL3ERR_INVAL, depending on the version
-of NFS_ACL that is in use. ACLs that are not valid include:<a href="#section-3.4.4.2-9" class="pilcrow">¶</a></p>
+of NFS_ACL that is in use. ACLs that are not valid include:<a href="#section-3.4.4.2-10" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.4.4.2-10.1">
-                <p id="section-3.4.4.2-10.1.1">The presented ACL does not contain one ACE for each of
-NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ<a href="#section-3.4.4.2-10.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.4.4.2-11.1">
+                <p id="section-3.4.4.2-11.1.1">The presented ACL has at least one ACE but does not
+contain one ACE for each of NA_USER_OBJ, NA_GROUP_OBJ,
+and NA_OTHER_OBJ<a href="#section-3.4.4.2-11.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.4.4.2-10.2">
-                <p id="section-3.4.4.2-10.2.1">The presented ACL contains an NA_GROUP ACE but no
-NA_CLASS_OBJ ACE<a href="#section-3.4.4.2-10.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.4.4.2-11.2">
+                <p id="section-3.4.4.2-11.2.1">The presented ACL contains an NA_GROUP ACE but no
+NA_CLASS_OBJ ACE<a href="#section-3.4.4.2-11.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.4.4.2-10.3">
-                <p id="section-3.4.4.2-10.3.1">The presented ACL is a default ACL but the target object
-is not a directory<a href="#section-3.4.4.2-10.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.4.4.2-11.3">
+                <p id="section-3.4.4.2-11.3.1">The presented ACL is a default ACL but the target object
+is not a directory<a href="#section-3.4.4.2-11.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.4.4.2-10.4">
-                <p id="section-3.4.4.2-10.4.1">The presented ACL contains an ACE whose "type" field
+              <li class="normal" id="section-3.4.4.2-11.4">
+                <p id="section-3.4.4.2-11.4.1">The presented ACL contains an ACE whose "type" field
 sets more than one of the base type values NA_USER_OBJ,
 NA_USER, NA_GROUP_OBJ, NA_GROUP, NA_CLASS_OBJ, and
 NA_OTHER_OBJ (the NA_ACL_DEFAULT flag may accompany
-exactly one such value)<a href="#section-3.4.4.2-10.4.1" class="pilcrow">¶</a></p>
+exactly one such value)<a href="#section-3.4.4.2-11.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.4.4.2-10.5">
-                <p id="section-3.4.4.2-10.5.1">The presented ACL contains an ACE whose type or perm
-field has a bit set that is not defined by this protocol<a href="#section-3.4.4.2-10.5.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.4.4.2-11.5">
+                <p id="section-3.4.4.2-11.5.1">The presented ACL contains an ACE whose type or perm
+field has a bit set that is not defined by this protocol<a href="#section-3.4.4.2-11.5.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.4.4.2-10.6">
-                <p id="section-3.4.4.2-10.6.1">The count for a non-empty "aclent" or "dfaclent" array
-differs from the number of entries in that array<a href="#section-3.4.4.2-10.6.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.4.4.2-11.6">
+                <p id="section-3.4.4.2-11.6.1">The count for a non-empty "aclent" or "dfaclent" array
+differs from the number of entries in that array<a href="#section-3.4.4.2-11.6.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-3.4.4.2-11">Whether an ACL that contains an NA_USER ACE but no
+<p id="section-3.4.4.2-12">Whether an ACL that contains an NA_USER ACE but no
 NA_CLASS_OBJ ACE is valid depends on the exported file
 system. A server responds with ACL2ERR_INVAL or ACL3ERR_INVAL
-when the exported file system rejects such an ACL.<a href="#section-3.4.4.2-11" class="pilcrow">¶</a></p>
-<p id="section-3.4.4.2-12">An ACL that has no more than NFS_ACL_MAX_ENTRIES entries in
+when the exported file system rejects such an ACL.<a href="#section-3.4.4.2-12" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-13">An ACL that has no more than NFS_ACL_MAX_ENTRIES entries in
 each array can still exceed what the exported file system
 stores in one ACL. A server reports that with ACL2ERR_NOSPC or
 ACL3ERR_NOSPC, or with ACL2ERR_INVAL or ACL3ERR_INVAL when the
-file system rejects the list as invalid.<a href="#section-3.4.4.2-12" class="pilcrow">¶</a></p>
-<p id="section-3.4.4.2-13">The NA_ACL_DEFAULT bit is a flag that a sender combines with
+file system rejects the list as invalid.<a href="#section-3.4.4.2-13" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-14">The NA_ACL_DEFAULT bit is a flag that a sender combines with
 one of the base type values (for example, NA_ACL_DEFAULT |
 NA_USER_OBJ) to mark an Access Control Entry as a default
 entry: one that a directory contributes to its newly created
@@ -1951,20 +1961,20 @@ NA_ACL_DEFAULT bit set in its "type" field, and no entry in the
 separate "dfaclent" array makes the flag redundant on the wire;
 a sender nonetheless sets it on every "dfaclent" entry so that a
 receiver can reconstruct the single, flag-tagged Access Control
-list that some file access APIs present to applications.<a href="#section-3.4.4.2-13" class="pilcrow">¶</a></p>
-<p id="section-3.4.4.2-14">The "id" field in an Access Control Entry is interpreted as follows:<a href="#section-3.4.4.2-14" class="pilcrow">¶</a></p>
+list that some file access APIs present to applications.<a href="#section-3.4.4.2-14" class="pilcrow">¶</a></p>
+<p id="section-3.4.4.2-15">The "id" field in an Access Control Entry is interpreted as follows:<a href="#section-3.4.4.2-15" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.4.4.2-15.1">
-                <p id="section-3.4.4.2-15.1.1">For an ACE that specifies an NA_USER_OBJ, NA_USER,
+<li class="normal" id="section-3.4.4.2-16.1">
+                <p id="section-3.4.4.2-16.1.1">For an ACE that specifies an NA_USER_OBJ, NA_USER,
 NA_GROUP, and NA_GROUP_OBJ, the "id" field contains
 a UID or GID value that identifies the user on the
-server whose access permission is being set.<a href="#section-3.4.4.2-15.1.1" class="pilcrow">¶</a></p>
+server whose access permission is being set.<a href="#section-3.4.4.2-16.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.4.4.2-15.2">
-                <p id="section-3.4.4.2-15.2.1">For an ACE that specifies other types of permission (for
+              <li class="normal" id="section-3.4.4.2-16.2">
+                <p id="section-3.4.4.2-16.2.1">For an ACE that specifies other types of permission (for
 example, NA_CLASS_OBJ or NA_OTHER_OBJ), the "id" field is
 undefined. A sender sets this field to zero, and a receiver
-ignores its value.<a href="#section-3.4.4.2-15.2.1" class="pilcrow">¶</a></p>
+ignores its value.<a href="#section-3.4.4.2-16.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
@@ -2830,10 +2840,12 @@ change a file's ACLs.<a href="#section-5.2.3.4-3" class="pilcrow">¶</a></p>
 <p id="section-5.2.3.4-4">When SETACL2args.fh represents a file object that does
 not implement support for ACLs, the server responds by
 setting SETACL2res.status to ACL2ERR_NOTSUPP.<a href="#section-5.2.3.4-4" class="pilcrow">¶</a></p>
-<p id="section-5.2.3.4-5">When the new ACL does not contain at least the minimal
-set of ACEs (as described in <a href="#acls-in-operation" class="auto internal xref">Section 3.4.4.2</a>), the
-server responds by setting SETACL2res.status to
-ACL2ERR_INVAL.<a href="#section-5.2.3.4-5" class="pilcrow">¶</a></p>
+<p id="section-5.2.3.4-5">When a list in SETACL2args.acl that has entries does not
+contain at least the minimal set of ACEs (as described in
+<a href="#acls-in-operation" class="auto internal xref">Section 3.4.4.2</a>), the server responds by setting
+SETACL2res.status to ACL2ERR_INVAL. A list with no entries
+is not subject to this check; <a href="#acls-in-operation" class="auto internal xref">Section 3.4.4.2</a>
+describes how a server treats it.<a href="#section-5.2.3.4-5" class="pilcrow">¶</a></p>
 <p id="section-5.2.3.4-6">Servers differ in how they treat the "mask" element of
 SETACL2args.acl. <a href="#setacl-mask" class="auto internal xref">Section 4.6.2.1</a> describes the divergence
 and how a client avoids it.<a href="#section-5.2.3.4-6" class="pilcrow">¶</a></p>
@@ -3901,10 +3913,12 @@ change a file's ACLs.<a href="#section-6.3.3.4-3" class="pilcrow">¶</a></p>
 <p id="section-6.3.3.4-4">When SETACL3args.fh represents a file object that does
 not implement support for ACLs, the server responds
 by setting SETACL3res.status to ACL3ERR_NOTSUPP.<a href="#section-6.3.3.4-4" class="pilcrow">¶</a></p>
-<p id="section-6.3.3.4-5">When SETACL3args.acl does not contain at least the
-minimal set of ACEs (as described in
+<p id="section-6.3.3.4-5">When a list in SETACL3args.acl that has entries does not
+contain at least the minimal set of ACEs (as described in
 <a href="#acls-in-operation" class="auto internal xref">Section 3.4.4.2</a>), the server responds by setting
-SETACL3res.status to ACL3ERR_INVAL.<a href="#section-6.3.3.4-5" class="pilcrow">¶</a></p>
+SETACL3res.status to ACL3ERR_INVAL. A list with no entries
+is not subject to this check; <a href="#acls-in-operation" class="auto internal xref">Section 3.4.4.2</a>
+describes how a server treats it.<a href="#section-6.3.3.4-5" class="pilcrow">¶</a></p>
 <p id="section-6.3.3.4-6">Servers differ in how they treat the "mask" element of
 SETACL3args.acl. <a href="#setacl-mask" class="auto internal xref">Section 4.6.2.1</a> describes the divergence
 and how a client avoids it.<a href="#section-6.3.3.4-6" class="pilcrow">¶</a></p>
