@@ -443,11 +443,21 @@ Access Control Entries in an ACL's "dfaclent" comprise
 an object's default ACL. The default ACL does not affect
 access to the object on which it is set.
 
-An access ACL, and a default ACL that has any ACEs, must have
-one ACE for each of NA_USER_OBJ, NA_GROUP_OBJ, and
-NA_OTHER_OBJ. An NFS ACL that consists only of these
-three ACEs is referred to as a minimal NFS ACL. A default ACL
-with no ACEs means the directory has no default ACL.
+An access ACL or default ACL that has any ACEs must have one
+ACE for each of NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ.
+An NFS ACL that consists only of these three ACEs is referred
+to as a minimal NFS ACL.
+
+A server treats an array with no entries as the absence of
+that list rather than as an ACL to validate. When a SETACL
+request carries an empty "aclent" array, the server removes
+the object's access ACL, and the permission bits alone then
+govern access. When a SETACL request carries an empty
+"dfaclent" array, the server removes the directory's default
+ACL. Which lists a SETACL request replaces also depends on
+the "mask" element ({{setacl-mask}}). Some servers respond
+with ACL2ERR_INVAL or ACL3ERR_INVAL to a SETACL request in
+which both arrays are empty.
 
 An NFS ACL may have zero or more NA_USER and/or NA_GROUP
 ACEs.
@@ -489,8 +499,9 @@ finds is invalid or it cannot process, the server responds
 with ACL2ERR_INVAL or ACL3ERR_INVAL, depending on the version
 of NFS_ACL that is in use. ACLs that are not valid include:
 
-* The presented ACL does not contain one ACE for each of
-  NA_USER_OBJ, NA_GROUP_OBJ, and NA_OTHER_OBJ
+* The presented ACL has at least one ACE but does not
+  contain one ACE for each of NA_USER_OBJ, NA_GROUP_OBJ,
+  and NA_OTHER_OBJ
 * The presented ACL contains an NA_GROUP ACE but no
   NA_CLASS_OBJ ACE
 * The presented ACL is a default ACL but the target object
@@ -1193,10 +1204,12 @@ When SETACL2args.fh represents a file object that does
 not implement support for ACLs, the server responds by
 setting SETACL2res.status to ACL2ERR_NOTSUPP.
 
-When the new ACL does not contain at least the minimal
-set of ACEs (as described in {{acls-in-operation}}), the
-server responds by setting SETACL2res.status to
-ACL2ERR_INVAL.
+When a list in SETACL2args.acl that has entries does not
+contain at least the minimal set of ACEs (as described in
+{{acls-in-operation}}), the server responds by setting
+SETACL2res.status to ACL2ERR_INVAL. A list with no entries
+is not subject to this check; {{acls-in-operation}}
+describes how a server treats it.
 
 Servers differ in how they treat the "mask" element of
 SETACL2args.acl. {{setacl-mask}} describes the divergence
@@ -1946,10 +1959,12 @@ When SETACL3args.fh represents a file object that does
 not implement support for ACLs, the server responds
 by setting SETACL3res.status to ACL3ERR_NOTSUPP.
 
-When SETACL3args.acl does not contain at least the
-minimal set of ACEs (as described in
+When a list in SETACL3args.acl that has entries does not
+contain at least the minimal set of ACEs (as described in
 {{acls-in-operation}}), the server responds by setting
-SETACL3res.status to ACL3ERR_INVAL.
+SETACL3res.status to ACL3ERR_INVAL. A list with no entries
+is not subject to this check; {{acls-in-operation}}
+describes how a server treats it.
 
 Servers differ in how they treat the "mask" element of
 SETACL3args.acl. {{setacl-mask}} describes the divergence
